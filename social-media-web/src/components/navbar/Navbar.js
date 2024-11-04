@@ -42,6 +42,13 @@ const styles = {
   iconButton: {
     color: '#0077B5',
   },
+  hoverMenuItem: {
+    '&:hover': {
+      backgroundColor: 'white',
+      color: '#2196f3',
+    },
+    paddingY: '8px',
+  }
 };
 
 const Navbar = () => {
@@ -66,7 +73,7 @@ const Navbar = () => {
               sx={{backgroundColor: '#fff', color: '#333', height: '70px'}}>
         <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
           {/* Left site */}
-          <Box sx={{display: 'flex', alignItems: 'center'}}>
+          <Box sx={{display: 'flex', alignItems: 'center', width: '25%'}}>
             <IconButton color="inherit" href="/home" title="Home">
               <Avatar alt="Vu Luu" src={logo}/>
             </IconButton>
@@ -85,7 +92,8 @@ const Navbar = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            gap: '10px'
+            gap: '10px',
+            width: '50%'
           }}>
             <IconButton color="inherit" href="/home" title="Home">
               <HomeIcon sx={{color: getIconColor('/home')}}/>
@@ -103,12 +111,17 @@ const Navbar = () => {
           </Box>
 
           {/*Right site*/}
-          <Box sx={{display: 'flex', alignItems: 'center', gap: '5px'}}>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            gap: '5px',
+            width: '25%'
+          }}>
             <IconButton color="inherit">
               <Badge sx={{
                 '& .MuiBadge-badge': {
-                  backgroundColor: '#ff5722',
-                  color: '#fff',
+                  backgroundColor: '#ff5722', color: '#fff',
                 },
               }} badgeContent={100} max={99}>
                 <NotificationsIcon/>
@@ -118,8 +131,7 @@ const Navbar = () => {
             <IconButton color="inherit">
               <Badge sx={{
                 '& .MuiBadge-badge': {
-                  backgroundColor: '#2196f3',
-                  color: '#fff',
+                  backgroundColor: '#2196f3', color: '#fff',
                 },
               }} badgeContent={100} max={99}>
                 <MessageIcon/>
@@ -135,13 +147,11 @@ const Navbar = () => {
                 open={Boolean(userMenu)}
                 onClose={handleMenuClick}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right'
+                  vertical: 'bottom', horizontal: 'right'
                 }}
 
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
+                  vertical: 'top', horizontal: 'right'
                 }}
             >
               <Box sx={{
@@ -161,9 +171,12 @@ const Navbar = () => {
                       color="textSecondary">vuluu@example.com</Typography>
                 </Box>
               </Box>
-              <MenuItem onClick={handleMenuClick}>Profile</MenuItem>
-              <MenuItem onClick={handleMenuClick}>Settings</MenuItem>
-              <MenuItem onClick={handleMenuClick}>Logout</MenuItem>
+              <MenuItem onClick={handleMenuClick}
+                        sx={styles.hoverMenuItem}>Profile</MenuItem>
+              <MenuItem onClick={handleMenuClick}
+                        sx={styles.hoverMenuItem}>Settings</MenuItem>
+              <MenuItem onClick={handleMenuClick}
+                        sx={styles.hoverMenuItem}>Logout</MenuItem>
 
             </Menu>
           </Box>

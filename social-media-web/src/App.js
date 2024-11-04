@@ -6,7 +6,7 @@ import {
   Routes,
   useLocation
 } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import {AnimatePresence, motion} from 'framer-motion';
 import Navbar from './components/navbar/Navbar';
 import Home from './page/home/Home';
 import Friend from './page/friend/Friend';
@@ -17,8 +17,8 @@ import Company from './page/company/Company';
 const App = () => {
   return (
       <Router>
-        <Navbar />
-        <PageRoutes />
+        <Navbar/>
+        <PageRoutes/>
       </Router>
   );
 };
@@ -32,23 +32,23 @@ const PageRoutes = () => {
         <Routes location={location} key={location.pathname}>
           <Route
               path="/home"
-              element={<PageTransition><Home /></PageTransition>}
+              element={<PageTransition><Home/></PageTransition>}
           />
           <Route
               path="/friends"
-              element={<PageTransition><Friend /></PageTransition>}
+              element={<PageTransition><Friend/></PageTransition>}
           />
           <Route
               path="/company"
-              element={<PageTransition><Company /></PageTransition>}
+              element={<PageTransition><Company/></PageTransition>}
           />
           <Route
               path="/jobs"
-              element={<PageTransition><Jobs /></PageTransition>}
+              element={<PageTransition><Jobs/></PageTransition>}
           />
           <Route
               path="/profile"
-              element={<PageTransition><Profile /></PageTransition>}
+              element={<PageTransition><Profile/></PageTransition>}
           />
         </Routes>
       </AnimatePresence>
@@ -56,13 +56,21 @@ const PageRoutes = () => {
 };
 
 // Component dùng để bọc từng trang với hiệu ứng chuyển động
-const PageTransition = ({ children }) => (
+const PageTransition = ({children}) => (
     <motion.div
-        initial={{ opacity: 0, x: 100 }} // Vị trí bắt đầu (lệch sang phải)
-        animate={{ opacity: 1, x: 0 }}   // Hoạt ảnh khi vào trang (trở về vị trí giữa)
-        exit={{ opacity: 0, x: -100 }}    // Hoạt ảnh khi thoát (lệch sang trái)
-        transition={{ duration: 0.3 }}    // Tốc độ chuyển đổi
-        style={{ paddingTop: '10px', marginTop: '80px' }} // Thêm khoảng cách
+        initial={{opacity: 0, x: 100}}
+        animate={{
+          opacity: 1,
+          x: 0
+        }}
+        exit={{opacity: 0, x: -100}}
+        transition={{duration: 0.3}}
+        style={{
+          padding: '10px 24px',
+          minHeight: '100vh',
+          marginTop: '80px',
+          backgroundColor: '#F3F2F2'
+        }}
     >
       {children}
     </motion.div>
