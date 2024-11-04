@@ -1,21 +1,26 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   AppBar,
   Avatar,
+  Badge,
   Box,
   IconButton,
   InputBase,
-  Toolbar
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MessageIcon from '@mui/icons-material/Message';
 import HomeIcon from '@mui/icons-material/Home';
-import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
 import SearchIcon from '@mui/icons-material/Search';
 import logo from "../../assets/img/logo-test.jpg";
 import GroupIcon from '@mui/icons-material/Group';
 import WorkIcon from '@mui/icons-material/Work';
+import BusinessIcon from '@mui/icons-material/Business';
+import {useLocation} from 'react-router-dom';
+
 const styles = {
   appBar: {
     backgroundColor: '#FFFFFF', // Màu nền trắng cho navbar
@@ -35,53 +40,132 @@ const styles = {
     flex: 1,
   },
   iconButton: {
-    color: '#0077B5', // Màu cho các biểu tượng
+    color: '#0077B5',
   },
 };
 
 const Navbar = () => {
+  // get the current link
+  const location = useLocation();
+
+  // update the icon color for user init page
+  const getIconColor = (path) => {
+    return location.pathname.startsWith(path) ? '#0077B5' : 'inherit';
+  };
+
+  // state user menu profile
+  const [userMenu, setUserMenu] = useState(null);
+
+  // handle function open menu
+  const handleMenuClick = (event) => {
+    setUserMenu(userMenu ? null : event.currentTarget);
+  };
+
   return (
-      <AppBar position='fixed' sx={{ backgroundColor: '#fff', color: '#333' }}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between'}}>
+      <AppBar position='fixed'
+              sx={{backgroundColor: '#fff', color: '#333', height: '70px'}}>
+        <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
           {/* Left site */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton color="inherit" href="#home" title="Home">
-              <Avatar alt="Vu Luu" src={logo} />
+          <Box sx={{display: 'flex', alignItems: 'center'}}>
+            <IconButton color="inherit" href="/home" title="Home">
+              <Avatar alt="Vu Luu" src={logo}/>
             </IconButton>
 
             <Box style={styles.search}>
-              <SearchIcon />
+              <SearchIcon/>
               <InputBase
-                  placeholder="Searching..."
+                  placeholder="Search"
                   style={styles.input}
               />
             </Box>
           </Box>
 
           {/* Center site */}
-          <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <IconButton color="inherit" href="#home" title="Home">
-              <HomeIcon />
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px'
+          }}>
+            <IconButton color="inherit" href="/home" title="Home">
+              <HomeIcon sx={{color: getIconColor('/home')}}/>
             </IconButton>
-            <IconButton color="inherit" href="#profile" title="Profile">
-              <GroupIcon />
+            <IconButton color="inherit" href="/friends" title="Friend">
+              <GroupIcon sx={{color: getIconColor('/friend')}}/>
             </IconButton>
-            <IconButton color="inherit" href="#settings" title="Settings">
-              <WorkIcon />
+            <IconButton color="inherit" href="/company" title="Settings">
+              <BusinessIcon sx={{color: getIconColor('/company')}}/>
             </IconButton>
+            <IconButton color="inherit" href="/jobs" title="Settings">
+              <WorkIcon sx={{color: getIconColor('/job')}}/>
+            </IconButton>
+
           </Box>
 
-          {/* Right site */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          {/*Right site*/}
+          <Box sx={{display: 'flex', alignItems: 'center', gap: '5px'}}>
             <IconButton color="inherit">
-              <NotificationsIcon />
+              <Badge sx={{
+                '& .MuiBadge-badge': {
+                  backgroundColor: '#ff5722',
+                  color: '#fff',
+                },
+              }} badgeContent={100} max={99}>
+                <NotificationsIcon/>
+              </Badge>
             </IconButton>
+
             <IconButton color="inherit">
-              <MessageIcon />
+              <Badge sx={{
+                '& .MuiBadge-badge': {
+                  backgroundColor: '#2196f3',
+                  color: '#fff',
+                },
+              }} badgeContent={100} max={99}>
+                <MessageIcon/>
+              </Badge>
             </IconButton>
-            <IconButton color="inherit">
-              <Avatar alt="Vu Luu" src={logo} />
+
+            <IconButton color="inherit" onClick={handleMenuClick}>
+              <Avatar alt="Vu Luu" src={logo}/>
             </IconButton>
+
+            <Menu
+                anchorEl={userMenu}
+                open={Boolean(userMenu)}
+                onClose={handleMenuClick}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right'
+                }}
+
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+            >
+              <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                p: '10px 20px'
+              }}>
+                <Avatar alt="Vu Luu" src={logo}/>
+                <Box>
+                  <Typography
+                      variant="subtitle1"
+                      sx={{wordBreak: 'break-word'}}>Vũ Lưu</Typography>
+                  <Typography
+                      variant="body2"
+                      sx={{wordBreak: 'break-word'}}
+                      color="textSecondary">vuluu@example.com</Typography>
+                </Box>
+              </Box>
+              <MenuItem onClick={handleMenuClick}>Profile</MenuItem>
+              <MenuItem onClick={handleMenuClick}>Settings</MenuItem>
+              <MenuItem onClick={handleMenuClick}>Logout</MenuItem>
+
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
