@@ -20,6 +20,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import WorkIcon from '@mui/icons-material/Work';
 import BusinessIcon from '@mui/icons-material/Business';
 import {useLocation} from 'react-router-dom';
+import AppLogo from "../icons/AppLogo"
 
 const styles = {
   appBar: {
@@ -75,7 +76,10 @@ const Navbar = () => {
           {/* Left site */}
           <Box sx={{display: 'flex', alignItems: 'center', width: '25%'}}>
             <IconButton color="inherit" href="/home" title="Home">
-              <Avatar alt="Vu Luu" src={logo}/>
+              <AppLogo
+                  width={60}
+                  height={60}
+              />
             </IconButton>
 
             <Box style={styles.search}>

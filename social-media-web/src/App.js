@@ -8,11 +8,8 @@ import {
 } from 'react-router-dom';
 import {AnimatePresence, motion} from 'framer-motion';
 import Navbar from './components/navbar/Navbar';
-import Home from './page/home/Home';
-import Friend from './page/friend/Friend';
-import Jobs from './page/job/Job';
-import Profile from './page/profile/Profile';
-import Company from './page/company/Company';
+import {Home,Friend,Jobs,Profile,Company} from './index';
+
 
 const App = () => {
   return (
