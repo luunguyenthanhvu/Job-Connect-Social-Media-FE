@@ -115,6 +115,7 @@ const Navbar = () => {
             </IconButton>
             <IconButton color="inherit" href="/notifications">
               <Badge sx={{
+                color: getIconColor('/notifications'),
                 '& .MuiBadge-badge': {
                   backgroundColor: '#ff5722', color: '#fff',
                 },
@@ -125,6 +126,7 @@ const Navbar = () => {
 
             <IconButton color="inherit">
               <Badge sx={{
+                color: getIconColor('/messages'),
                 '& .MuiBadge-badge': {
                   backgroundColor: '#2196f3', color: '#fff',
                 },
