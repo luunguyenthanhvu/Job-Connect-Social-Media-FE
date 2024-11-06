@@ -71,7 +71,7 @@ const Navbar = () => {
 
   return (
       <AppBar position='fixed'
-              sx={{backgroundColor: '#fff', color: '#333', height: '70px'}}>
+              sx={{backgroundColor: '#fff', color: '#333', marginBottom: '80px', height: '70px'}}>
         <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
           {/* Left site */}
           <Box sx={{display: 'flex', alignItems: 'center', width: '25%'}}>

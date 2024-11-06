@@ -1,9 +1,6 @@
 import React, {useState} from 'react';
 import Card from "@mui/material/Card";
-import {Avatar, Box, Button, CardHeader, IconButton} from "@mui/material";
-import logo from "../../assets/img/logo-test.jpg";
-import CreatePostModal from "./CreatePostModal";
-import PostCard from "../abstract-components/PostCard"
+import {Box} from "@mui/material";
 
 const MainContent = () => {
   // State for post
@@ -54,52 +51,9 @@ const MainContent = () => {
   return (
       <Box>
         <Card sx={{boxShadow: 3, borderRadius: 2, marginBottom: '10px'}}>
-          <CardHeader
-              avatar={
-                <Box
-                    sx={{display: "flex", alignItems: "center", width: '100%'}}>
-                  <IconButton color="inherit">
-                    <Avatar alt="Vu Luu" src={logo}/>
-                  </IconButton>
-                  <Button
-                      onClick={handleCreatePost}
-                      variant="outlined"
-                      sx={{
-                        padding: "4px 8px",
-                        borderRadius: "20px",
-                        backgroundColor: "#f5f5f5",
-                        flex: 1,
-                        minWidth: '550px',
-                        color: '#000',
-                        border: '1px solid #F3F2F2',
-                        marginLeft: '8px',
-                        textAlign: 'left',
-                        '&:hover': {
-                          color: '#2196f3',
-                          border: '1px solid #2196f3',
-                        }
-                      }}
-                  >
-                    Create a post...
-                  </Button>
-                </Box>
-              }
-          />
+
+
         </Card>
-
-        {/* For user create a post*/}
-        <CreatePostModal
-            createPost={createPost}
-            handleCreatePost={handleCreatePost}
-        />
-
-        {/*  News Feed*/}
-        {mockPosts.map(post => (
-            <PostCard
-                post={post}
-                maxWidth="100%"
-            />
-        ))}
       </Box>
   );
 };

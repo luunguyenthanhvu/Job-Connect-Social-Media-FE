@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import {
   BrowserRouter as Router,
@@ -8,44 +7,69 @@ import {
 } from 'react-router-dom';
 import {AnimatePresence, motion} from 'framer-motion';
 import Navbar from './components/navbar/Navbar';
-import {Home,Friend,Jobs,Profile,Company} from './index';
-
+import {Company, Friend, Home, Jobs, Profile} from './index';
+import ForgotPassword from "./page/sign-in/ForgotPassword";
+import Login from "./page/sign-in/SignIn";
 
 const App = () => {
   return (
       <Router>
-        <Navbar/>
+        <ConditionalNavbar/>
         <PageRoutes/>
       </Router>
   );
 };
 
+// Check if page needs Navbar
+const ConditionalNavbar = () => {
+  const location = useLocation();
+  const noNavbarPaths = ['/login', '/forgot-password'];
+
+  return !noNavbarPaths.includes(location.pathname) ? <Navbar/> : null;
+};
+
 // Component để xử lý hiệu ứng chuyển trang
 const PageRoutes = () => {
   const location = useLocation();
+  const noNavbarPaths = ['/login', '/forgot-password'];
 
   return (
       <AnimatePresence>
         <Routes location={location} key={location.pathname}>
           <Route
               path="/home"
-              element={<PageTransition><Home/></PageTransition>}
+              element={<PageTransition
+                  hasNavbar={!noNavbarPaths.includes(location.pathname)}><Home/></PageTransition>}
           />
           <Route
               path="/friends"
-              element={<PageTransition><Friend/></PageTransition>}
+              element={<PageTransition hasNavbar={!noNavbarPaths.includes(
+                  location.pathname)}><Friend/></PageTransition>}
           />
           <Route
               path="/company"
-              element={<PageTransition><Company/></PageTransition>}
+              element={<PageTransition hasNavbar={!noNavbarPaths.includes(
+                  location.pathname)}><Company/></PageTransition>}
           />
           <Route
               path="/jobs"
-              element={<PageTransition><Jobs/></PageTransition>}
+              element={<PageTransition
+                  hasNavbar={!noNavbarPaths.includes(location.pathname)}><Jobs/></PageTransition>}
           />
           <Route
               path="/profile"
-              element={<PageTransition><Profile/></PageTransition>}
+              element={<PageTransition hasNavbar={!noNavbarPaths.includes(
+                  location.pathname)}><Profile/></PageTransition>}
+          />
+          <Route
+              path="/login"
+              element={<PageTransition
+                  hasNavbar={false}><Login/></PageTransition>}
+          />
+          <Route
+              path="/forgot-password"
+              element={<PageTransition
+                  hasNavbar={false}><ForgotPassword/></PageTransition>}
           />
         </Routes>
       </AnimatePresence>
@@ -53,7 +77,7 @@ const PageRoutes = () => {
 };
 
 // Component dùng để bọc từng trang với hiệu ứng chuyển động
-const PageTransition = ({children}) => (
+const PageTransition = ({children, hasNavbar}) => (
     <motion.div
         initial={{opacity: 0, x: 100}}
         animate={{
@@ -65,7 +89,7 @@ const PageTransition = ({children}) => (
         style={{
           padding: '10px 24px',
           minHeight: '100vh',
-          marginTop: '80px',
+          marginTop: hasNavbar ? '70px' : '0',
           backgroundColor: '#F3F2F2'
         }}
     >

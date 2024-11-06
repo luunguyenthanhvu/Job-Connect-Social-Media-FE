@@ -9,7 +9,7 @@ const styles = {
   }
 }
 
-const RightSideBar = () => {
+const Footer = () => {
   return (
       <Box sx={{
         backgroundColor: '#f8f9fa',
@@ -61,4 +61,4 @@ const RightSideBar = () => {
   );
 };
 
-export default RightSideBar;
+export default Footer;

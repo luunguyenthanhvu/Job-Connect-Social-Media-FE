@@ -30,7 +30,7 @@ const listItemButtonStyle = {
   paddingY: '8px',
 };
 
-const LeftSidebar = () => {
+const LeftSideBar = () => {
   return (
       <Box sx={{paddingRight: '10px', maxWidth: '80%'}}>
         <Card sx={{boxShadow: 3, borderRadius: 2, marginBottom: '10px'}}>
@@ -98,4 +98,4 @@ const LeftSidebar = () => {
   );
 };
 
-export default LeftSidebar;
+export default LeftSideBar;
