@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import {AnimatePresence, motion} from 'framer-motion';
 import Navbar from './components/navbar/Navbar';
-import {Company, Friend, Home, Jobs, Profile} from './index';
+import {Friend, Home, Jobs, Notification, Profile} from './index';
 import ForgotPassword from "./page/sign-in/ForgotPassword";
 import Login from "./page/sign-in/SignIn";
 
@@ -47,9 +47,9 @@ const PageRoutes = () => {
                   location.pathname)}><Friend/></PageTransition>}
           />
           <Route
-              path="/company"
+              path="/notifications"
               element={<PageTransition hasNavbar={!noNavbarPaths.includes(
-                  location.pathname)}><Company/></PageTransition>}
+                  location.pathname)}><Notification/></PageTransition>}
           />
           <Route
               path="/jobs"

@@ -7,7 +7,7 @@ export {default as Home} from './page/home/Home';
 export {default as Friend} from './page/friend/Friend';
 export {default as Jobs} from './page/job/Job';
 export {default as Profile} from './page/profile/Profile';
-export {default as Company} from './page/company/Company';
+export {default as Notification} from './page/notifications/Notification';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -71,7 +71,12 @@ const Navbar = () => {
 
   return (
       <AppBar position='fixed'
-              sx={{backgroundColor: '#fff', color: '#333', marginBottom: '80px', height: '70px'}}>
+              sx={{
+                backgroundColor: '#fff',
+                color: '#333',
+                marginBottom: '80px',
+                height: '70px'
+              }}>
         <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
           {/* Left site */}
           <Box sx={{display: 'flex', alignItems: 'center', width: '25%'}}>
@@ -105,24 +110,10 @@ const Navbar = () => {
             <IconButton color="inherit" href="/friends" title="Friend">
               <GroupIcon sx={{color: getIconColor('/friend')}}/>
             </IconButton>
-            <IconButton color="inherit" href="/company" title="Settings">
-              <BusinessIcon sx={{color: getIconColor('/company')}}/>
-            </IconButton>
             <IconButton color="inherit" href="/jobs" title="Settings">
               <WorkIcon sx={{color: getIconColor('/job')}}/>
             </IconButton>
-
-          </Box>
-
-          {/*Right site*/}
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
-            gap: '5px',
-            width: '25%'
-          }}>
-            <IconButton color="inherit">
+            <IconButton color="inherit" href="/notifications">
               <Badge sx={{
                 '& .MuiBadge-badge': {
                   backgroundColor: '#ff5722', color: '#fff',
@@ -142,6 +133,16 @@ const Navbar = () => {
               </Badge>
             </IconButton>
 
+          </Box>
+
+          {/*Right site*/}
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            gap: '5px',
+            width: '25%'
+          }}>
             <IconButton color="inherit" onClick={handleMenuClick}>
               <Avatar alt="Vu Luu" src={logo}/>
             </IconButton>
