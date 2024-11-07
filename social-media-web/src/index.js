@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 export {default as Home} from './page/home/Home';
 export {default as Friend} from './page/friend/Friend';
 export {default as Jobs} from './page/job/Job';
+export {default as JobPage} from './page/job-details/JobPage';
 export {default as Profile} from './page/profile/Profile';
 export {default as Notification} from './page/notifications/Notification';
 

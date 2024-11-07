@@ -1,98 +1,95 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Avatar,
   IconButton,
   Link,
   ListItem,
   ListItemAvatar,
-  ListItemIcon,
   ListItemText,
   Typography
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-const NotificationItem = () => (
-    <>
+const NotificationItem = ({notification}) => {
+  const [isRead, setIsRead] = useState(notification.isRead === "true");
+
+  return (
       <ListItem
           alignItems="flex-start"
           sx={{
             padding: "10px 20px",
             cursor: "pointer",
             borderBottom: "1px solid #e6e6e6",
+            backgroundColor: isRead ? 'transparent' : '#f0f8ff', // Different background for unread notifications
             '&:hover': {
-              background: '#efeeee'
+              background: '#efeeee',
             },
+            fontWeight: isRead ? 400 : 700, // Bold for unread notifications
           }}
+          onClick={() => setIsRead(
+              true)} // Update state when user clicks on the notification
           secondaryAction={
             <IconButton aria-label="settings">
               <MoreVertIcon/>
             </IconButton>
           }
       >
-        <ListItemIcon
-            sx={{
-              alignContent: 'center',
-              margin: 'auto 0px',
-              minWidth: '0px',
-            }}>
-          <MoreVertIcon/>
-        </ListItemIcon>
+
 
         <ListItemAvatar>
-          <Avatar alt='notification name' src=""/>
+          <Avatar alt={notification.notificationUser} src={notification.avt}/>
         </ListItemAvatar>
+
         <ListItemText
             primary={
-              <Link variant="subtitle1"
-                    sx={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      textDecoration: 'none',
-                      '&:hover': {
-                        textDecoration: 'underline',
-                        textDecorationColor: '#7b7b7b',
-                      }
-                    }}>
+              <Link
+                  variant="subtitle1"
+                  sx={{
+                    cursor: 'pointer',
+                    display: 'flex',
+                    textDecoration: 'none',
+                    '&:hover': {
+                      textDecoration: 'underline',
+                      textDecorationColor: '#7b7b7b',
+                    },
+                  }}
+              >
                 <Typography
                     sx={{
                       fontWeight: 700,
                       color: '#0077B5',
                       display: 'span',
-                      '&:hover': {
-                        textDecoration: 'underline',
-                        textDecorationColor: '#7b7b7b',
-                      }
-                    }}>Vu Luu : </Typography>
-
+                    }}
+                >
+                  {notification.notificationUser}:
+                </Typography>
                 <Typography
                     sx={{
                       color: 'text.primary',
                       fontWeight: 500,
                       display: 'span',
-                      marginBottom: '4px',
                       marginLeft: '5px',
-
-                    }}> Post new job... I need 4 dev in webapp.....</Typography>
+                    }}
+                >
+                  {notification.notificationContent}
+                </Typography>
               </Link>
             }
             secondary={
-              <>
-                <Typography
-                    variant="body2"
-                    sx={{
-                      color: 'text.secondary',
-                      display: 'block',
-                      fontStyle: 'italic',
-                    }}
-                >
-                  06/11/2024
-                </Typography>
-              </>
+              <Typography
+                  variant="body2"
+                  sx={{
+                    color: 'text.secondary',
+                    display: 'block',
+                    fontStyle: 'italic',
+                  }}
+              >
+                {notification.notificationTime}
+              </Typography>
             }
-
         />
       </ListItem>
-    </>
-);
+  );
+};
 
 export default NotificationItem;

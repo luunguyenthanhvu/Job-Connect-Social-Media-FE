@@ -18,7 +18,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import logo from "../../assets/img/logo-test.jpg";
 import GroupIcon from '@mui/icons-material/Group';
 import WorkIcon from '@mui/icons-material/Work';
-import BusinessIcon from '@mui/icons-material/Business';
 import {useLocation} from 'react-router-dom';
 import AppLogo from "../icons/AppLogo"
 
@@ -55,7 +54,7 @@ const styles = {
 const Navbar = () => {
   // get the current link
   const location = useLocation();
-
+  const showAddressSearch = location.pathname === '/jobs/collections';
   // update the icon color for user init page
   const getIconColor = (path) => {
     return location.pathname.startsWith(path) ? '#0077B5' : 'inherit';
@@ -94,6 +93,13 @@ const Navbar = () => {
                   style={styles.input}
               />
             </Box>
+
+            {showAddressSearch && (
+                <Box style={styles.search}>
+                  <InputBase placeholder="Address" style={styles.input}/>
+                </Box>
+            )}
+
           </Box>
 
           {/* Center site */}
