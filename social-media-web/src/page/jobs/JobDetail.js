@@ -1,17 +1,18 @@
 import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import {Box, Button, Typography} from '@mui/material';
 
-const JobDetail = ({ job }) => {
+const JobDetail = ({job}) => {
   return (
-      <Box sx={{ padding: 2 }}>
+      <Box sx={{padding: 2}}>
         <Typography variant="h5" gutterBottom>
-          {job.title}
+          {job.jobTitle}
         </Typography>
         <Typography variant="subtitle1" color="textSecondary" paragraph>
-          {job.company} - {job.location}
+          {job.companyName} - {job.address}
         </Typography>
         <Typography variant="body1" paragraph>
-          {job.description}
+          {/* Placeholder for job description */}
+          Detailed job description will go here.
         </Typography>
         <Button variant="contained" color="primary">
           Apply Now
