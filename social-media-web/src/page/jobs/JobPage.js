@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Grid} from '@mui/material';
-
-import JobDetail from './JobDetail';
+import {Box, Button, Grid, Modal, Typography} from '@mui/material';
 import MainContent from "../../components/job/MainContent";
+import JobPosting from "./JobPosting";
+import JobDetail from "./JobDetail";
 
 const JobPage = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [filter, setFilter] = useState('');
+  const [openPostModal, setOpenPostModal] = useState(false);
 
   const handleJobClick = (job) => {
     setSelectedJob(job);
@@ -87,6 +88,8 @@ const JobPage = () => {
     }
   }, []);
 
+  const handleOpenModal = () => setOpenPostModal(true);
+  const handleCloseModal = () => setOpenPostModal(false);
   return (
       <Box sx={{
         display: 'flex',
@@ -96,6 +99,37 @@ const JobPage = () => {
         width: '80%',
         margin: 'auto'
       }}>
+        {/* Nút đăng tuyển chỉ hiện khi người dùng là nhà tuyển dụng */}
+        {true && (
+            <Box sx={{display: 'flex', justifyContent: 'flex-end', margin: 2}}>
+              <Button variant="contained" color="primary"
+                      onClick={handleOpenModal}>
+                Đăng Tuyển Dụng
+              </Button>
+            </Box>
+        )}
+
+        {/* Modal đăng bài tuyển dụng */}
+        <Modal
+            open={openPostModal}
+            onClose={handleCloseModal}
+            aria-labelledby="post-job-modal-title"
+            aria-describedby="post-job-modal-description"
+        >
+          <Box sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 1
+          }}>
+            <JobPosting onClose={handleCloseModal}/>
+          </Box>
+        </Modal>
+
         <Grid container sx={{flexGrow: 1, height: 'calc(100vh - 120px)'}}>
           {/* Job List */}
           <Grid item xs={12} md={4} sx={{overflowY: 'auto', height: '100%'}}>
@@ -106,11 +140,12 @@ const JobPage = () => {
           </Grid>
 
           {/* Job Detail */}
-          <Grid item xs={12} md={8} sx={{ overflowY: 'auto', height: '100%' }}>
+          <Grid item xs={12} md={8} sx={{overflowY: 'auto', height: '100%'}}>
             {selectedJob ? (
-                <JobDetail job={selectedJob} />
+                <JobDetail job={selectedJob}/>
+                //<JobPosting></JobPosting>
             ) : (
-                <Box sx={{ padding: 2 }}>Select a job to see details</Box>
+                <Box sx={{padding: 2}}>Select a job to see details</Box>
             )}
           </Grid>
         </Grid>

@@ -8,6 +8,7 @@ export {default as Friend} from './page/friend/Friend';
 export {default as JobPage} from './page/jobs/JobPage';
 export {default as Profile} from './page/profile/UserProfile';
 export {default as Notification} from './page/notifications/Notification';
+export {default as EmployerProfile} from './page/profile/EmployerProfile';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

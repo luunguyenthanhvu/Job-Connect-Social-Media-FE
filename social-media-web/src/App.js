@@ -7,7 +7,15 @@ import {
 } from 'react-router-dom';
 import {AnimatePresence, motion} from 'framer-motion';
 import Navbar from './components/navbar/Navbar';
-import {Friend, Home, JobPage, Notification, Profile} from './index';
+import {
+  EmployerProfile,
+  Friend,
+  Home,
+  JobPage,
+  JobPostingForm,
+  Notification,
+  Profile
+} from './index';
 import ForgotPassword from "./page/sign-in/ForgotPassword";
 import Login from "./page/sign-in/SignIn";
 
@@ -54,7 +62,8 @@ const PageRoutes = () => {
           <Route
               path="/jobs"
               element={<PageTransition
-                  hasNavbar={!noNavbarPaths.includes(location.pathname)}><JobPage/></PageTransition>}
+                  hasNavbar={!noNavbarPaths.includes(
+                      location.pathname)}><JobPage/></PageTransition>}
           />
 
 
@@ -62,6 +71,13 @@ const PageRoutes = () => {
               path="/profile"
               element={<PageTransition hasNavbar={!noNavbarPaths.includes(
                   location.pathname)}><Profile/></PageTransition>}
+          />
+          <Route
+              path="/employer-profile"
+              element={<PageTransition hasNavbar={!noNavbarPaths.includes(
+                  location.pathname)}><EmployerProfile/></PageTransition>}
+          />
+
           />
           <Route
               path="/login"
