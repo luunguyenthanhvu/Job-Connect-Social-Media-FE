@@ -130,7 +130,7 @@ const Navbar = () => {
               </Badge>
             </IconButton>
 
-            <IconButton color="inherit">
+            <IconButton color="inherit" href="/messages">
               <Badge sx={{
                 color: getIconColor('/messages'),
                 '& .MuiBadge-badge': {

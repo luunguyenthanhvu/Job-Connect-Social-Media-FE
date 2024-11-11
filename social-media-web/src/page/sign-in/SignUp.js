@@ -1,10 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
@@ -13,8 +10,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import {styled} from '@mui/material/styles';
-import ForgotPassword from './ForgotPassword';
-import {FacebookIcon, GoogleIcon, SitemarkIcon} from './CustomIcons';
+import {SitemarkIcon} from './CustomIcons';
 import AppTheme from '../../components/shared-theme/AppTheme';
 
 const Card = styled(MuiCard)(({theme}) => ({
@@ -59,7 +55,7 @@ const SignInContainer = styled(Stack)(({theme}) => ({
   },
 }));
 
-export default function SignIn(props) {
+export default function SignUp(props) {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -81,14 +77,17 @@ export default function SignIn(props) {
     }
     const data = new FormData(event.currentTarget);
     console.log({
+      username: data.get('username'),
       email: data.get('email'),
       password: data.get('password'),
+      phoneNumber: data.get('phoneNumber'),
     });
   };
 
   const validateInputs = () => {
     const email = document.getElementById('email');
     const password = document.getElementById('password');
+    const phoneNumber = document.getElementById('phoneNumber');
 
     let isValid = true;
 
@@ -110,6 +109,10 @@ export default function SignIn(props) {
       setPasswordErrorMessage('');
     }
 
+    if (!phoneNumber.value || phoneNumber.value.length < 10) {
+      isValid = false;
+    }
+
     return isValid;
   };
 
@@ -124,7 +127,7 @@ export default function SignIn(props) {
                 variant="h4"
                 sx={{width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)'}}
             >
-              Sign in
+              Sign up
             </Typography>
             <Box
                 component="form"
@@ -137,6 +140,19 @@ export default function SignIn(props) {
                   gap: 2,
                 }}
             >
+              <FormControl>
+                <FormLabel htmlFor="username">Username</FormLabel>
+                <TextField
+                    id="username"
+                    name="username"
+                    placeholder="Enter username"
+                    autoComplete="username"
+                    required
+                    fullWidth
+                    variant="outlined"
+                />
+              </FormControl>
+
               <FormControl>
                 <FormLabel htmlFor="email">Email</FormLabel>
                 <TextField
@@ -155,18 +171,22 @@ export default function SignIn(props) {
                     sx={{ariaLabel: 'email'}}
                 />
               </FormControl>
+
+              <FormControl>
+                <FormLabel htmlFor="phoneNumber">Phone Number</FormLabel>
+                <TextField
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    placeholder="Enter phone number"
+                    required
+                    fullWidth
+                    variant="outlined"
+                />
+              </FormControl>
+
               <FormControl>
                 <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                   <FormLabel htmlFor="password">Password</FormLabel>
-                  <Link
-                      component="button"
-                      type="button"
-                      onClick={handleClickOpen}
-                      variant="body2"
-                      sx={{alignSelf: 'baseline'}}
-                  >
-                    Forgot your password?
-                  </Link>
                 </Box>
                 <TextField
                     error={passwordError}
@@ -183,50 +203,28 @@ export default function SignIn(props) {
                     color={passwordError ? 'error' : 'primary'}
                 />
               </FormControl>
-              <FormControlLabel
-                  control={<Checkbox value="remember" color="primary"/>}
-                  label="Remember me"
-              />
-              <ForgotPassword open={open} handleClose={handleClose}/>
+
               <Button
                   type="submit"
                   fullWidth
                   variant="contained"
                   onClick={validateInputs}
               >
-                Sign in
+                Sign up
               </Button>
+
               <Typography sx={{textAlign: 'center'}}>
-                Don&apos;t have an account?{' '}
+                Already have an account?{' '}
                 <span>
-                <Link
-                    href="/register"
-                    variant="body2"
-                    sx={{alignSelf: 'center'}}
-                >
-                  Sign up
-                </Link>
-              </span>
+                  <Link
+                      href="/login"
+                      variant="body2"
+                      sx={{alignSelf: 'center'}}
+                  >
+                    Sign in
+                  </Link>
+                </span>
               </Typography>
-            </Box>
-            <Divider>or</Divider>
-            <Box sx={{display: 'flex', flexDirection: 'column', gap: 2}}>
-              <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => alert('Sign in with Google')}
-                  startIcon={<GoogleIcon/>}
-              >
-                Sign in with Google
-              </Button>
-              <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => alert('Sign in with Facebook')}
-                  startIcon={<FacebookIcon/>}
-              >
-                Sign in with Facebook
-              </Button>
             </Box>
           </Card>
         </SignInContainer>

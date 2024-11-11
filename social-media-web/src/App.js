@@ -7,18 +7,21 @@ import {
 } from 'react-router-dom';
 import {AnimatePresence, motion} from 'framer-motion';
 import Navbar from './components/navbar/Navbar';
+import ForgotPassword from "./page/sign-in/ForgotPassword";
+import Login from "./page/sign-in/SignIn";
+import SignUp from "./page/sign-in/SignUp";
+import VerifyAccount from "./page/sign-in/VerifyAccount";
 import {
   EmployerProfile,
   Friend,
   Home,
-  JobPage,
-  JobPostingForm,
+  JobPage, Message,
   Notification,
   Profile
 } from './index';
-import ForgotPassword from "./page/sign-in/ForgotPassword";
-import Login from "./page/sign-in/SignIn";
 
+const noNavbarPaths = ['/', '/login', '/forgot-password', '/register',
+  '/verify'];
 const App = () => {
   return (
       <Router>
@@ -31,7 +34,6 @@ const App = () => {
 // Check if page needs Navbar
 const ConditionalNavbar = () => {
   const location = useLocation();
-  const noNavbarPaths = ['/login', '/forgot-password'];
 
   return !noNavbarPaths.includes(location.pathname) ? <Navbar/> : null;
 };
@@ -39,11 +41,15 @@ const ConditionalNavbar = () => {
 // Component để xử lý hiệu ứng chuyển trang
 const PageRoutes = () => {
   const location = useLocation();
-  const noNavbarPaths = ['/login', '/forgot-password'];
 
   return (
       <AnimatePresence>
         <Routes location={location} key={location.pathname}>
+          <Route
+              path="/"
+              element={<PageTransition
+                  hasNavbar={false}><Login/></PageTransition>}
+          />
           <Route
               path="/home"
               element={<PageTransition
@@ -66,6 +72,12 @@ const PageRoutes = () => {
                       location.pathname)}><JobPage/></PageTransition>}
           />
 
+          <Route
+              path="/messages"
+              element={<PageTransition
+                  hasNavbar={!noNavbarPaths.includes(
+                      location.pathname)}><Message/></PageTransition>}
+          />
 
           <Route
               path="/profile"
@@ -79,10 +91,22 @@ const PageRoutes = () => {
           />
 
           />
+
           <Route
               path="/login"
               element={<PageTransition
                   hasNavbar={false}><Login/></PageTransition>}
+          />
+
+          <Route
+              path="/register"
+              element={<PageTransition
+                  hasNavbar={false}><SignUp/></PageTransition>}
+          />
+          <Route
+              path="/verify"
+              element={<PageTransition
+                  hasNavbar={false}><VerifyAccount/></PageTransition>}
           />
           <Route
               path="/forgot-password"
