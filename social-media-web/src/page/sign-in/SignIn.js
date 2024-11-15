@@ -16,6 +16,8 @@ import {styled} from '@mui/material/styles';
 import ForgotPassword from './ForgotPassword';
 import {FacebookIcon, GoogleIcon, SitemarkIcon} from './CustomIcons';
 import AppTheme from '../../components/shared-theme/AppTheme';
+import axios from "axios";
+import apiConfig from "../../api/apiConfig";
 
 const Card = styled(MuiCard)(({theme}) => ({
   display: 'flex',
@@ -60,6 +62,8 @@ const SignInContainer = styled(Stack)(({theme}) => ({
 }));
 
 export default function SignIn(props) {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -87,12 +91,10 @@ export default function SignIn(props) {
   };
 
   const validateInputs = () => {
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
-
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    // Kiểm tra email
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setEmailError(true);
       setEmailErrorMessage('Please enter a valid email address.');
       isValid = false;
@@ -101,7 +103,8 @@ export default function SignIn(props) {
       setEmailErrorMessage('');
     }
 
-    if (!password.value || password.value.length < 6) {
+    // Kiểm tra mật khẩu
+    if (!password || password.length < 1) { // Đảm bảo kiểm tra đúng với 6 ký tự
       setPasswordError(true);
       setPasswordErrorMessage('Password must be at least 6 characters long.');
       isValid = false;
@@ -113,6 +116,31 @@ export default function SignIn(props) {
     return isValid;
   };
 
+
+  const handleLogin = async (event) => {
+    // Check if field validate
+    event.preventDefault();
+
+    // Check if field validate
+    if (validateInputs()) {
+      try {
+        const response = await axios.post(apiConfig.login, {
+          email: email,
+          password: password
+        });
+
+        console.log(response);
+
+        if (response.status === 200) {
+          console.log("Login successful:", response);
+        }
+
+      } catch (error) {
+        // Log lỗi ra console nếu có
+        console.error("Login error:", error);
+      }
+    }
+  }
   return (
       <AppTheme {...props}>
         <CssBaseline enableColorScheme/>
@@ -145,6 +173,8 @@ export default function SignIn(props) {
                     id="email"
                     type="email"
                     name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
                     autoComplete="email"
                     autoFocus
@@ -175,6 +205,8 @@ export default function SignIn(props) {
                     placeholder="••••••"
                     type="password"
                     id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     autoComplete="current-password"
                     autoFocus
                     required
@@ -192,7 +224,7 @@ export default function SignIn(props) {
                   type="submit"
                   fullWidth
                   variant="contained"
-                  onClick={validateInputs}
+                  onClick={handleLogin}
               >
                 Sign in
               </Button>

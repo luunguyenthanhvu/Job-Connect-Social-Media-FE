@@ -15,19 +15,23 @@ import {
   EmployerProfile,
   Friend,
   Home,
-  JobPage, Message,
+  JobPage,
+  Message,
   Notification,
   Profile
 } from './index';
+import ErrorProvider from "./error-handler/ErrorContext";
 
 const noNavbarPaths = ['/', '/login', '/forgot-password', '/register',
   '/verify'];
 const App = () => {
   return (
-      <Router>
-        <ConditionalNavbar/>
-        <PageRoutes/>
-      </Router>
+      <ErrorProvider>
+        <Router>
+          <ConditionalNavbar/>
+          <PageRoutes/>
+        </Router>
+      </ErrorProvider>
   );
 };
 
