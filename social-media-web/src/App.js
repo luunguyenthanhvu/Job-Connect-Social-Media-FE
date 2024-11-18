@@ -20,18 +20,21 @@ import {
   Notification,
   Profile
 } from './index';
-import ErrorProvider from "./error-handler/ErrorContext";
+import {GlobalErrorProvider} from "./error-handler/GlobalErrorProvider";
+import {LoadingProvider} from './context/LoadingContext';
 
 const noNavbarPaths = ['/', '/login', '/forgot-password', '/register',
   '/verify'];
 const App = () => {
   return (
-      <ErrorProvider>
-        <Router>
-          <ConditionalNavbar/>
-          <PageRoutes/>
-        </Router>
-      </ErrorProvider>
+      <GlobalErrorProvider>
+        <LoadingProvider>
+          <Router>
+            <ConditionalNavbar/>
+            <PageRoutes/>
+          </Router>
+        </LoadingProvider>
+      </GlobalErrorProvider>
   );
 };
 

@@ -61,6 +61,10 @@ export default function SignUp(props) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const [username, setUsername] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [phoneNum, setPhoneNum] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
   const handleClickOpen = () => {
     setOpen(true);

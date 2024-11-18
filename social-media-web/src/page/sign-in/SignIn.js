@@ -18,7 +18,12 @@ import {FacebookIcon, GoogleIcon, SitemarkIcon} from './CustomIcons';
 import AppTheme from '../../components/shared-theme/AppTheme';
 import axios from "axios";
 import apiConfig from "../../api/apiConfig";
-
+import {useGlobalError} from '../../error-handler/GlobalErrorProvider';
+import {useLoading} from '../../context/LoadingContext';
+import {useNavigate} from 'react-router-dom';
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import SuccessAlert from "../../context/SuccessAlert";
 const Card = styled(MuiCard)(({theme}) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -62,6 +67,8 @@ const SignInContainer = styled(Stack)(({theme}) => ({
 }));
 
 export default function SignIn(props) {
+  // Loading content
+  const {showLoading, hideLoading} = useLoading();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
@@ -69,7 +76,14 @@ export default function SignIn(props) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const {throwError} = useGlobalError();
 
+  // Redirect to other page
+  const navigate = useNavigate();
+
+  // Alert info for user
+  const [openAlert, setOpenAlert] = React.useState(false);  // State for controlling Snackbar visibility
+  const [alertMessage, setAlertMessage] = React.useState('');
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -116,7 +130,6 @@ export default function SignIn(props) {
     return isValid;
   };
 
-
   const handleLogin = async (event) => {
     // Check if field validate
     event.preventDefault();
@@ -124,20 +137,32 @@ export default function SignIn(props) {
     // Check if field validate
     if (validateInputs()) {
       try {
+        showLoading();
         const response = await axios.post(apiConfig.login, {
           email: email,
           password: password
         });
 
-        console.log(response);
-
         if (response.status === 200) {
-          console.log("Login successful:", response);
+          const resultValue = response.data.result;
+          setEmail('');
+          setPassword('');
+          localStorage.setItem("accessToken", resultValue.token);
+
+          // Show success alert
+          setAlertMessage('Login successful! Redirecting...');
+          setOpenAlert(true);
+
+          // Redirect after 2 seconds
+          setTimeout(() => {
+            navigate('/home');
+          }, 2000);
         }
 
       } catch (error) {
-        // Log lỗi ra console nếu có
-        console.error("Login error:", error);
+        throwError(error);
+      } finally {
+        hideLoading();
       }
     }
   }
@@ -262,6 +287,11 @@ export default function SignIn(props) {
             </Box>
           </Card>
         </SignInContainer>
+        <SuccessAlert
+            open={openAlert}
+            setOpenAlert={setOpenAlert}
+            alertMessage={alertMessage}
+        />
       </AppTheme>
   );
 }
