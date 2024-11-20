@@ -12,6 +12,12 @@ import MuiCard from '@mui/material/Card';
 import {styled} from '@mui/material/styles';
 import {SitemarkIcon} from './CustomIcons';
 import AppTheme from '../../components/shared-theme/AppTheme';
+import {useGlobalError} from '../../error-handler/GlobalErrorProvider';
+import {useLoading} from '../../context/LoadingContext';
+import {useNavigate} from 'react-router-dom';
+import SuccessAlert from "../../context/SuccessAlert";
+import axios from "axios";
+import apiConfig from "../../api/apiConfig";
 
 const Card = styled(MuiCard)(({theme}) => ({
   display: 'flex',
@@ -56,16 +62,22 @@ const SignInContainer = styled(Stack)(({theme}) => ({
 }));
 
 export default function SignUp(props) {
+  // Loading content
+  const {showLoading, hideLoading} = useLoading();
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
-  const [username, setUsername] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [phoneNum, setPhoneNum] = React.useState('');
-  const [password, setPassword] = React.useState('');
 
+  const {throwError} = useGlobalError();
+
+  // Redirect to other page
+  const navigate = useNavigate();
+
+  // Alert info for user
+  const [openAlert, setOpenAlert] = React.useState(false);  // State for controlling Snackbar visibility
+  const [alertMessage, setAlertMessage] = React.useState('');
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -74,18 +86,41 @@ export default function SignUp(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     if (emailError || passwordError) {
       event.preventDefault();
       return;
     }
     const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get('username'),
-      email: data.get('email'),
-      password: data.get('password'),
-      phoneNumber: data.get('phoneNumber'),
-    });
+    console.log(data.get('username'))
+    event.preventDefault();
+    try {
+      showLoading();
+      const response = await axios.post(apiConfig.register, {
+        username: data.get('username'),
+        email: data.get('email'),
+        password: data.get('password'),
+        phoneNumber: data.get('phoneNumber'),
+      });
+      console.log(data.get('email'));
+      localStorage.setItem("email", data.get('email'));
+      if (response.status === 200) {
+        const resultValue = response.data.result;
+        // Show success alert
+        setAlertMessage('Sign up successful! Redirecting...');
+        setOpenAlert(true);
+
+        // Redirect after 2 seconds
+        setTimeout(() => {
+          navigate('/verify');
+        }, 2000);
+      }
+
+    } catch (error) {
+      throwError(error);
+    } finally {
+      hideLoading();
+    }
   };
 
   const validateInputs = () => {
@@ -232,6 +267,11 @@ export default function SignUp(props) {
             </Box>
           </Card>
         </SignInContainer>
+        <SuccessAlert
+            open={openAlert}
+            setOpenAlert={setOpenAlert}
+            alertMessage={alertMessage}
+        />
       </AppTheme>
   );
 }

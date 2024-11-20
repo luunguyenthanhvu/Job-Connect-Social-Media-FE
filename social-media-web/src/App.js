@@ -27,14 +27,14 @@ const noNavbarPaths = ['/', '/login', '/forgot-password', '/register',
   '/verify'];
 const App = () => {
   return (
-      <GlobalErrorProvider>
-        <LoadingProvider>
-          <Router>
-            <ConditionalNavbar/>
-            <PageRoutes/>
-          </Router>
-        </LoadingProvider>
-      </GlobalErrorProvider>
+      <Router>
+        <GlobalErrorProvider>
+          <LoadingProvider>
+            <ConditionalNavbar />
+            <PageRoutes />
+          </LoadingProvider>
+        </GlobalErrorProvider>
+      </Router>
   );
 };
 
@@ -97,7 +97,6 @@ const PageRoutes = () => {
                   location.pathname)}><EmployerProfile/></PageTransition>}
           />
 
-          />
 
           <Route
               path="/login"

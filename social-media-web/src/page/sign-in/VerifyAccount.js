@@ -9,7 +9,10 @@ import {
 import {styled} from '@mui/material/styles';
 import AppTheme from '../../components/shared-theme/AppTheme';
 import {SitemarkIcon} from './CustomIcons';
-
+import axios from "axios";
+import apiConfig from "../../api/apiConfig";
+import {useGlobalError} from '../../error-handler/GlobalErrorProvider';
+import {useNavigate} from "react-router-dom";
 const Container = styled(Box)(({theme}) => ({
   display: 'flex',
   justifyContent: 'center',
@@ -22,6 +25,7 @@ const FormBox = styled(Box)(({theme}) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
+  background: '#fff',
   maxWidth: 400,
   width: '100%',
   padding: theme.spacing(4),
@@ -41,24 +45,40 @@ export default function VerifyAccount() {
   const [message, setMessage] = React.useState('');
   const [messageType, setMessageType] = React.useState(''); // 'success' or 'error'
 
-  const handleVerify = () => {
+  const {throwError} = useGlobalError();
+
+  // Redirect to other page
+  const navigate = useNavigate();
+
+  const handleVerify = async () => {
     if (!verificationCode) {
       setMessage('Please enter the verification code.');
       setMessageType('error');
       return;
     }
     setIsLoading(true);
-    // Simulate verification API request
-    setTimeout(() => {
-      if (verificationCode === '123456') {  // Simulating successful verification code
-        setMessage('Account verified successfully!');
-        setMessageType('success');
-      } else {
-        setMessage('Invalid verification code. Please try again.');
-        setMessageType('error');
+    console.log("email user ne " +  localStorage.getItem('email'))
+    try {
+      setIsLoading(true);
+      const response = await axios.post(apiConfig.verify, {
+        email: localStorage.getItem('email'),
+        code: verificationCode
+      });
+
+      if (response.status === 200) {
+        const resultValue = response.data.result;
+        // Redirect after 2 seconds
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
       }
+
+    } catch (error) {
+      console.log(error)
+      throwError(error);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleResendCode = () => {
@@ -85,6 +105,7 @@ export default function VerifyAccount() {
                 value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value)}
                 fullWidth
+                placeholder="••••••"
                 required
                 InputLabelProps={{
                   shrink: true,
@@ -92,7 +113,6 @@ export default function VerifyAccount() {
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 4,
-                    backgroundColor: '#f5f5f5',
                   },
                   '& .MuiInputBase-input': {
                     padding: '12px', // Adjust padding for better aesthetics

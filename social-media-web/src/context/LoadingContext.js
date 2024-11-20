@@ -14,7 +14,7 @@ export const LoadingProvider = ({ children }) => {
       <LoadingContext.Provider value={{ loading, showLoading, hideLoading }}>
         {children}
         <Backdrop
-            sx={{ color: '#00a5ff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            sx={{ color: '#00a5ff', zIndex: (theme) => theme.zIndex.drawer + 1000 }}
             open={loading}
         >
           <CircularProgress color="inherit" />

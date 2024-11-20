@@ -21,9 +21,8 @@ import apiConfig from "../../api/apiConfig";
 import {useGlobalError} from '../../error-handler/GlobalErrorProvider';
 import {useLoading} from '../../context/LoadingContext';
 import {useNavigate} from 'react-router-dom';
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
 import SuccessAlert from "../../context/SuccessAlert";
+
 const Card = styled(MuiCard)(({theme}) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -142,13 +141,14 @@ export default function SignIn(props) {
           email: email,
           password: password
         });
-
+        console.log(email)
+        localStorage.setItem("email", email);
+        console.log("email user ne " +  localStorage.getItem('email'));
         if (response.status === 200) {
           const resultValue = response.data.result;
           setEmail('');
           setPassword('');
           localStorage.setItem("accessToken", resultValue.token);
-
           // Show success alert
           setAlertMessage('Login successful! Redirecting...');
           setOpenAlert(true);
