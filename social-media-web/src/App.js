@@ -7,31 +7,33 @@ import {
 } from 'react-router-dom';
 import {AnimatePresence, motion} from 'framer-motion';
 import Navbar from './components/navbar/Navbar';
-import ForgotPassword from "./page/sign-in/ForgotPassword";
-import Login from "./page/sign-in/SignIn";
-import SignUp from "./page/sign-in/SignUp";
-import VerifyAccount from "./page/sign-in/VerifyAccount";
+
 import {
+  AccountSetup,
   EmployerProfile,
+  ForgotPassword,
   Friend,
   Home,
   JobPage,
+  Login,
   Message,
   Notification,
-  Profile
+  Profile,
+  SignUp,
+  VerifyAccount
 } from './index';
 import {GlobalErrorProvider} from "./error-handler/GlobalErrorProvider";
 import {LoadingProvider} from './context/LoadingContext';
 
 const noNavbarPaths = ['/', '/login', '/forgot-password', '/register',
-  '/verify'];
+  '/verify', '/account-setup'];
 const App = () => {
   return (
       <Router>
         <GlobalErrorProvider>
           <LoadingProvider>
-            <ConditionalNavbar />
-            <PageRoutes />
+            <ConditionalNavbar/>
+            <PageRoutes/>
           </LoadingProvider>
         </GlobalErrorProvider>
       </Router>
@@ -97,7 +99,11 @@ const PageRoutes = () => {
                   location.pathname)}><EmployerProfile/></PageTransition>}
           />
 
-
+          <Route
+              path="/account-setup"
+              element={<PageTransition hasNavbar={!noNavbarPaths.includes(
+                  location.pathname)}><AccountSetup/></PageTransition>}
+          />
           <Route
               path="/login"
               element={<PageTransition
