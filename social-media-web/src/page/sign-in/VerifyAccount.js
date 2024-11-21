@@ -13,6 +13,7 @@ import axios from "axios";
 import apiConfig from "../../api/apiConfig";
 import {useGlobalError} from '../../error-handler/GlobalErrorProvider';
 import {useNavigate} from "react-router-dom";
+
 const Container = styled(Box)(({theme}) => ({
   display: 'flex',
   justifyContent: 'center',
@@ -57,7 +58,7 @@ export default function VerifyAccount() {
       return;
     }
     setIsLoading(true);
-    console.log("email user ne " +  localStorage.getItem('email'))
+    console.log("email user ne " + localStorage.getItem('email'))
     try {
       setIsLoading(true);
       const response = await axios.post(apiConfig.verify, {
@@ -67,10 +68,24 @@ export default function VerifyAccount() {
 
       if (response.status === 200) {
         const resultValue = response.data.result;
-        // Redirect after 2 seconds
-        setTimeout(() => {
-          navigate('/login');
-        }, 2000);
+        if (resultValue.message === 'Verify code out date.') {
+          console.log("Lỗi hết hạn nè")
+          setIsLoading(true);
+          // Simulate resend verification code API request
+          setTimeout(() => {
+            setMessage(
+                'Verify code out date. Verification code sent again to your email.');
+            setMessageType('error');
+            setIsLoading(false);
+          }, 1000);
+        } else {
+          setMessage('Verify successfully!');
+          setMessageType('success');
+          // Redirect after 2 seconds
+          setTimeout(() => {
+            navigate('/login');
+          }, 1000);
+        }
       }
 
     } catch (error) {
@@ -81,14 +96,26 @@ export default function VerifyAccount() {
     }
   };
 
-  const handleResendCode = () => {
-    setIsLoading(true);
-    // Simulate resend verification code API request
-    setTimeout(() => {
-      setMessage('Verification code sent again to your email.');
-      setMessageType('success');
+  const handleResendCode = async () => {
+    try {
+      setIsLoading(true);
+
+      const response = await axios.post(apiConfig.resendVerifyCode, {
+        email: localStorage.getItem('email'),
+        code: verificationCode
+      });
+
+      if (response.status === 200) {
+        setTimeout(() => {
+          setMessage('Verification code sent again to your email.');
+          setMessageType('success');
+        }, 1000);
+      }
+    } catch (error) {
+      throwError(error);
+    }  finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
