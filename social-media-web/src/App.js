@@ -11,7 +11,7 @@ import Navbar from './components/navbar/Navbar';
 import {
   AccountSetup,
   EmployerProfile,
-  ForgotPassword,
+
   Friend,
   Home,
   JobPage,
@@ -119,11 +119,6 @@ const PageRoutes = () => {
               path="/verify"
               element={<PageTransition
                   hasNavbar={false}><VerifyAccount/></PageTransition>}
-          />
-          <Route
-              path="/forgot-password"
-              element={<PageTransition
-                  hasNavbar={false}><ForgotPassword/></PageTransition>}
           />
         </Routes>
       </AnimatePresence>

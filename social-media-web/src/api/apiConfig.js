@@ -9,6 +9,9 @@ const apiConfig = {
   resendVerifyCode: `${API_BASE_URL}/api/user-service/auth/resend-verify-code`,
 
   // user service
+
+  // aggregation service
+  userBasicInfo: `${API_BASE_URL}/api/aggregation-service/query/user-basic-info`,
 };
 
 export default apiConfig;

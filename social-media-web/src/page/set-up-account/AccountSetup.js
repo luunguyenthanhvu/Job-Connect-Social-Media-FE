@@ -1,21 +1,62 @@
-import React, { useState } from "react";
-import { Box, Button, Grid, Step, StepLabel, Stepper, Tab, Tabs, TextField, Typography } from "@mui/material";
-
-import { CSSTransition, TransitionGroup } from "react-transition-group";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
+import React, {useState} from "react";
+import {
+  Box,
+  Button,
+  Grid,
+  Step,
+  StepLabel,
+  Stepper,
+  Tab,
+  Tabs,
+  TextField,
+  Typography
+} from "@mui/material";
+import AvatarEditor from 'react-avatar-editor';
+import {CSSTransition, TransitionGroup} from "react-transition-group";
+import {CKEditor} from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "./style.css";
 import AppLogo from "../../components/icons/AppLogo";
 
 const AccountSetup = () => {
+
+  const [preview, setPreview] = useState(null);
+  const [imageSrc, setImageSrc] = useState(null);
+  const [editorVisible, setEditorVisible] = useState(false);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageSrc(reader.result);
+        setEditorVisible(true);
+      };
+      reader.readAsDataURL(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSaveAvatar = () => {
+    const canvas = document.getElementById(
+        'avatar-editor').getElementsByTagName('canvas')[0];
+    const img = canvas.toDataURL(); // Get the image data after editing
+    setPreview(img);
+    setEditorVisible(false);
+  };
+
   const [tabValue, setTabValue] = useState(0);
   const [step, setStep] = useState(0);
 
-  const [formValues, setFormValues] = useState({
+  const [formValueEmployer, setFormValueEmployer] = useState({
     description: "",
     website: "",
     country: "",
     industry: "",
+  });
+
+  const [formValueApplicant, setFormValueApplicant] = useState({
+    description: "",
     firstname: "",
     lastname: "",
     dob: "",
@@ -26,19 +67,29 @@ const AccountSetup = () => {
     certifications: "",
   });
 
-  const steps = ["Account Type", "Enter Details", "Review & Submit"];
+  const steps = ["Account Type", "Enter Details", "Choose Avatar",
+    "Review & Submit"];
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
     setStep(0);
   };
 
-  const handleInputChange = (event) => {
-    setFormValues({ ...formValues, [event.target.name]: event.target.value });
+  const handleInputEmployerChange = (event) => {
+    setFormValueEmployer(
+        {...formValueEmployer, [event.target.name]: event.target.value});
   };
 
-  const handleDescriptionChange = (data) => {
-    setFormValues({ ...formValues, description: data });
+  const handleDescriptionEmployerChange = (data) => {
+    setFormValueEmployer({...formValueEmployer, description: data});
+  };
+  const handleInputApplicantChange = (event) => {
+    setFormValueApplicant(
+        {...formValueApplicant, [event.target.name]: event.target.value});
+  };
+
+  const handleDescriptionApplicantChange = (data) => {
+    setFormValueApplicant({...formValueApplicant, description: data});
   };
 
   const handleNextStep = () => {
@@ -50,7 +101,7 @@ const AccountSetup = () => {
   };
 
   const handleSubmit = () => {
-    console.log("Form submitted:", formValues);
+
   };
 
   const renderFormFields = () => {
@@ -63,10 +114,10 @@ const AccountSetup = () => {
               </Typography>
               <CKEditor
                   editor={ClassicEditor}
-                  data={formValues.description}
+                  data={formValueEmployer.description}
                   onChange={(event, editor) => {
                     const data = editor.getData();
-                    handleDescriptionChange(data);
+                    handleDescriptionEmployerChange(data);
                   }}
               />
             </Grid>
@@ -75,8 +126,8 @@ const AccountSetup = () => {
                   fullWidth
                   label="Website"
                   name="website"
-                  value={formValues.website}
-                  onChange={handleInputChange}
+                  value={formValueEmployer.website}
+                  onChange={handleInputEmployerChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -84,8 +135,8 @@ const AccountSetup = () => {
                   fullWidth
                   label="Country"
                   name="country"
-                  value={formValues.country}
-                  onChange={handleInputChange}
+                  value={formValueEmployer.country}
+                  onChange={handleInputEmployerChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -93,8 +144,8 @@ const AccountSetup = () => {
                   fullWidth
                   label="Industry"
                   name="industry"
-                  value={formValues.industry}
-                  onChange={handleInputChange}
+                  value={formValueEmployer.industry}
+                  onChange={handleInputEmployerChange}
               />
             </Grid>
           </Grid>
@@ -103,70 +154,97 @@ const AccountSetup = () => {
 
     if (tabValue === 1) {
       return (
-          <Grid container spacing={2}>
+          <Grid container spacing={2}
+                sx={{
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+          >
+            <Box sx={{
+              width: '100%',
+              display: 'flex',
+              gap: '5px',
+              margin: '5px 10px',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <Grid item xs={16}>
+                <TextField
+                    fullWidth
+                    label="First Name"
+                    name="firstname"
+                    value={formValueApplicant.firstname}
+                    onChange={handleInputApplicantChange}
+                />
+              </Grid>
+              <Grid item xs={16}>
+                <TextField
+                    fullWidth
+                    label="Last Name"
+                    name="lastname"
+                    value={formValueApplicant.lastname}
+                    onChange={handleInputApplicantChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                    fullWidth
+                    label="Date of Birth"
+                    name="dob"
+                    type="date"
+                    InputLabelProps={{shrink: true}}
+                    value={formValueApplicant.dob}
+                    onChange={handleInputApplicantChange}
+                />
+              </Grid>
+            </Box>
             <Grid item xs={12}>
-              <TextField
-                  fullWidth
-                  label="First Name"
-                  name="firstname"
-                  value={formValues.firstname}
-                  onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                  fullWidth
-                  label="Last Name"
-                  name="lastname"
-                  value={formValues.lastname}
-                  onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                  fullWidth
-                  label="Date of Birth"
-                  name="dob"
-                  type="date"
-                  InputLabelProps={{ shrink: true }}
-                  value={formValues.dob}
-                  onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                  fullWidth
-                  label="Summary"
-                  name="summary"
-                  value={formValues.summary}
-                  onChange={handleInputChange}
-                  multiline
-                  rows={3}
+              <Typography variant="body1" gutterBottom>
+                Description:
+              </Typography>
+              <CKEditor
+                  editor={ClassicEditor}
+                  data={formValueApplicant.description}
+                  onChange={(event, editor) => {
+                    const data = editor.getData();
+                    handleDescriptionApplicantChange(data);
+                  }}
               />
             </Grid>
           </Grid>
       );
     }
+
   };
 
   return (
-      <Box sx={{ maxWidth: "100%", backgroundColor: "#fff", margin: "auto", padding: "30px 200px", mt: 4 }}>
+      <Box sx={{
+        maxWidth: "100%",
+        backgroundColor: "#fff",
+        margin: "auto",
+        padding: "30px 200px",
+        mt: 4
+      }}>
         <Typography
-            sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}
             variant="h4"
             align="center"
             gutterBottom
         >
-          <AppLogo width={60} height={60} />
+          <AppLogo width={60} height={60}/>
           Create Your Account
         </Typography>
 
         <Tabs value={tabValue} onChange={handleTabChange} centered>
-          <Tab label="Employer" />
-          <Tab label="Applicant" />
+          <Tab label="Employer"/>
+          <Tab label="Applicant"/>
         </Tabs>
 
-        <Stepper activeStep={step} sx={{ my: 3 }}>
+        <Stepper activeStep={step} sx={{my: 3}}>
           {steps.map((label, index) => (
               <Step key={index}>
                 <StepLabel>{label}</StepLabel>
@@ -179,18 +257,75 @@ const AccountSetup = () => {
             <Box>
               {step === 0 && (
                   <Box textAlign="center">
-                    <Typography variant="h6">Step 1: Choose Account Type</Typography>
-                    <Typography variant="body1" sx={{ mt: 2 }}>
+                    <Typography variant="h6">Step 1: Choose Account
+                      Type</Typography>
+                    <Typography variant="body1" sx={{mt: 2}}>
                       Selected: {tabValue === 0 ? "Employer" : "Applicant"}
                     </Typography>
                   </Box>
               )}
               {step === 1 && <Box>{renderFormFields()}</Box>}
               {step === 2 && (
+                  <Box textAlign="center"
+                       sx={{position: 'relative', display: 'inline-block'}}>
+                    <Typography variant="h6" gutterBottom>Choose Your
+                      Avatar</Typography>
+                    <Box sx={{
+                      position: 'relative',
+                      width: 150,
+                      height: 150,
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      border: '2px solid #ddd',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      backgroundColor: '#f5f5f5',
+                      '&:hover .overlay': {opacity: 1},
+                    }}>
+                      {preview ? (
+                          <img src={preview} alt="Avatar Preview" style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover'
+                          }}/>
+                      ) : (
+                          <Typography variant="body1" sx={{color: '#aaa'}}>No
+                            Avatar</Typography>
+                      )}
+                    </Box>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={handleAvatarChange}
+                    />
+                    <Button variant="contained" component="label" sx={{mt: 2}}>Upload
+                      Avatar</Button>
+
+                    {editorVisible && (
+                        <Box sx={{mt: 3}}>
+                          <AvatarEditor
+                              id="avatar-editor"
+                              image={imageSrc}
+                              width={150}
+                              height={150}
+                              borderRadius={75} // Makes the crop area round
+                          />
+                          <Button variant="contained" sx={{mt: 2}}
+                                  onClick={handleSaveAvatar}>Save
+                            Avatar</Button>
+                        </Box>
+                    )}
+                  </Box>
+              )}
+              {step === 3 && (
                   <Box>
-                    <Typography variant="h6">Review Your Information</Typography>
-                    <Typography variant="body2" sx={{ mt: 2 }}>
-                      {JSON.stringify(formValues, null, 2)}
+                    <Typography variant="h6">Review Your
+                      Information</Typography>
+                    <Typography variant="body2" sx={{mt: 2}}>
+                      {JSON.stringify(formValueApplicant, null, 2)}
                     </Typography>
                   </Box>
               )}
@@ -198,8 +333,9 @@ const AccountSetup = () => {
           </CSSTransition>
         </TransitionGroup>
 
-        <Box sx={{ mt: 3, display: "flex", justifyContent: "space-between" }}>
-          <Button variant="outlined" disabled={step === 0} onClick={handlePreviousStep}>
+        <Box sx={{mt: 3, display: "flex", justifyContent: "space-between"}}>
+          <Button variant="outlined" disabled={step === 0}
+                  onClick={handlePreviousStep}>
             Back
           </Button>
           {step === steps.length - 1 ? (
