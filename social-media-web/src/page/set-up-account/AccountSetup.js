@@ -17,33 +17,25 @@ import {CKEditor} from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "./style.css";
 import AppLogo from "../../components/icons/AppLogo";
+import { PinturaEditor } from '@pqina/react-pintura';
+import { getEditorDefaults } from '@pqina/pintura';
 
+import '@pqina/pintura/pintura.css';
 const AccountSetup = () => {
-
-  const [preview, setPreview] = useState(null);
+  const [inlineResult, setInlineResult] = useState();
   const [imageSrc, setImageSrc] = useState(null);
-  const [editorVisible, setEditorVisible] = useState(false);
 
-  const handleAvatarChange = (e) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageSrc(reader.result);
-        setEditorVisible(true);
       };
       reader.readAsDataURL(file);
-      setPreview(URL.createObjectURL(file));
     }
   };
 
-  const handleSaveAvatar = () => {
-    const canvas = document.getElementById(
-        'avatar-editor').getElementsByTagName('canvas')[0];
-    const img = canvas.toDataURL(); // Get the image data after editing
-    setPreview(img);
-    setEditorVisible(false);
-  };
 
   const [tabValue, setTabValue] = useState(0);
   const [step, setStep] = useState(0);
@@ -266,59 +258,104 @@ const AccountSetup = () => {
               )}
               {step === 1 && <Box>{renderFormFields()}</Box>}
               {step === 2 && (
-                  <Box textAlign="center"
-                       sx={{position: 'relative', display: 'inline-block'}}>
-                    <Typography variant="h6" gutterBottom>Choose Your
-                      Avatar</Typography>
-                    <Box sx={{
-                      position: 'relative',
-                      width: 150,
-                      height: 150,
-                      borderRadius: '50%',
-                      overflow: 'hidden',
-                      border: '2px solid #ddd',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      cursor: 'pointer',
-                      backgroundColor: '#f5f5f5',
-                      '&:hover .overlay': {opacity: 1},
-                    }}>
-                      {preview ? (
-                          <img src={preview} alt="Avatar Preview" style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover'
-                          }}/>
-                      ) : (
-                          <Typography variant="body1" sx={{color: '#aaa'}}>No
-                            Avatar</Typography>
+                  <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "20px",
+                        padding: "20px",
+                        border: "1px solid #ddd",
+                        borderRadius: "10px",
+                        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                        backgroundColor: "#f9f9f9",
+                        width: "90%",
+                        maxWidth: "1200px",
+                        margin: "0 auto",
+                      }}
+                  >
+                    {/* Phần chọn ảnh */}
+                    <Box
+                        sx={{
+                          flex: "1",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          gap: "10px",
+                          border: "2px dashed #ccc",
+                          borderRadius: "10px",
+                          justifyContent: "center",
+                          background: imageSrc ? `url(${imageSrc}) center/cover no-repeat` : "#f0f0f0",
+                          height: "300px",
+                          position: "relative",
+                        }}
+                    >
+                      {!imageSrc && (
+                          <Typography
+                              sx={{
+                                color: "#666",
+                                textAlign: "center",
+                                fontWeight: "bold",
+                              }}
+                          >
+                            Click to Upload
+                          </Typography>
                       )}
+                      <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageChange}
+                          style={{
+                            opacity: 0,
+                            position: "absolute",
+                            width: "100%",
+                            height: "100%",
+                            cursor: "pointer",
+                          }}
+                      />
                     </Box>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        hidden
-                        onChange={handleAvatarChange}
-                    />
-                    <Button variant="contained" component="label" sx={{mt: 2}}>Upload
-                      Avatar</Button>
 
-                    {editorVisible && (
-                        <Box sx={{mt: 3}}>
-                          <AvatarEditor
-                              id="avatar-editor"
-                              image={imageSrc}
-                              width={150}
-                              height={150}
-                              borderRadius={75} // Makes the crop area round
+                    {/* Trình chỉnh sửa ảnh */}
+                    {imageSrc && (
+                        <Box sx={{ flex: "2", display: "flex", flexDirection: "column", gap: "10px" }}>
+                          <Typography variant="h6" sx={{ textAlign: "center", fontWeight: "bold" }}>
+                            Edit Avatar
+                          </Typography>
+                          <Box sx={{ height: "300px" }}>
+                            <PinturaEditor
+                                {...getEditorDefaults()}
+                                src={imageSrc}
+                                imageCropAspectRatio={1}
+                                outputWidth={1024}
+                                outputHeight={1024}
+                                onProcess={(res) => setInlineResult(URL.createObjectURL(res.dest))}
+                            />
+                          </Box>
+                        </Box>
+                    )}
+
+                    {/* Ảnh chỉnh sửa xong */}
+                    {inlineResult && (
+                        <Box sx={{ flex: "1", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                          <Typography
+                              variant="h6"
+                              sx={{ textAlign: "center", fontWeight: "bold", marginBottom: "10px" }}
+                          >
+                            Edited Image
+                          </Typography>
+                          <img
+                              src={inlineResult}
+                              alt="Edited"
+                              style={{
+                                width: "100%",
+                                borderRadius: "10px",
+                                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                              }}
                           />
-                          <Button variant="contained" sx={{mt: 2}}
-                                  onClick={handleSaveAvatar}>Save
-                            Avatar</Button>
                         </Box>
                     )}
                   </Box>
+
+
               )}
               {step === 3 && (
                   <Box>
