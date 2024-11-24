@@ -19,7 +19,7 @@ import "./style.css";
 import AppLogo from "../../components/icons/AppLogo";
 import { PinturaEditor } from '@pqina/react-pintura';
 import { getEditorDefaults } from '@pqina/pintura';
-
+import UserCV from "../../components/cv/UserCV"
 import '@pqina/pintura/pintura.css';
 const AccountSetup = () => {
   const [inlineResult, setInlineResult] = useState();
@@ -358,13 +358,7 @@ const AccountSetup = () => {
 
               )}
               {step === 3 && (
-                  <Box>
-                    <Typography variant="h6">Review Your
-                      Information</Typography>
-                    <Typography variant="body2" sx={{mt: 2}}>
-                      {JSON.stringify(formValueApplicant, null, 2)}
-                    </Typography>
-                  </Box>
+                  <UserCV/>
               )}
             </Box>
           </CSSTransition>
