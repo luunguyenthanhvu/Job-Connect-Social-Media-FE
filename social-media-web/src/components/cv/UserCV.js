@@ -41,7 +41,7 @@ const UserCV = () => {
             Nguyễn Nhật Minh
           </Typography>
           <Typography variant="body1"
-                      sx={{marginTop: '10px', textAlign: 'center'}}>
+                      sx={{ color: "rgba(20,171,226,255)",marginTop: '10px', textAlign: 'center'}}>
             JAVA DEVELOPER
           </Typography>
           <Typography variant="body2" sx={{marginTop: '20px'}}>
@@ -84,7 +84,7 @@ const UserCV = () => {
           padding: '20px'
         }}>
           <Typography variant="h6"
-                      sx={{fontWeight: '600', marginBottom: '10px'}}>
+                      sx={{ color: "rgba(20,171,226,255)",fontWeight: '600', marginBottom: '10px'}}>
             EDUCATION
           </Typography>
           <Typography variant="body2" sx={{marginBottom: '15px'}}>
@@ -100,8 +100,8 @@ const UserCV = () => {
           <Divider sx={{marginBottom: '20px'}}/>
 
           <Typography variant="h6"
-                      sx={{fontWeight: '600', marginBottom: '10px'}}>
-            JAVA UNIVERSITY PROJECTS
+                      sx={{ color: "rgba(20,171,226,255)",fontWeight: '600', marginBottom: '10px'}}>
+            PROJECTS
           </Typography>
           <Typography variant="body2" sx={{marginBottom: '10px'}}>
             <b>Library Management Swing App</b> <br/>
