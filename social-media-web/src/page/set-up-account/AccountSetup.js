@@ -11,16 +11,16 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import AvatarEditor from 'react-avatar-editor';
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import {CKEditor} from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "./style.css";
 import AppLogo from "../../components/icons/AppLogo";
-import { PinturaEditor } from '@pqina/react-pintura';
-import { getEditorDefaults } from '@pqina/pintura';
+import {PinturaEditor} from '@pqina/react-pintura';
+import {getEditorDefaults} from '@pqina/pintura';
 import UserCV from "../../components/cv/UserCV"
 import '@pqina/pintura/pintura.css';
+
 const AccountSetup = () => {
   const [inlineResult, setInlineResult] = useState();
   const [imageSrc, setImageSrc] = useState(null);
@@ -35,7 +35,6 @@ const AccountSetup = () => {
       reader.readAsDataURL(file);
     }
   };
-
 
   const [tabValue, setTabValue] = useState(0);
   const [step, setStep] = useState(0);
@@ -284,7 +283,9 @@ const AccountSetup = () => {
                           border: "2px dashed #ccc",
                           borderRadius: "10px",
                           justifyContent: "center",
-                          background: imageSrc ? `url(${imageSrc}) center/cover no-repeat` : "#f0f0f0",
+                          background: imageSrc
+                              ? `url(${imageSrc}) center/cover no-repeat`
+                              : "#f0f0f0",
                           height: "300px",
                           position: "relative",
                         }}
@@ -316,18 +317,27 @@ const AccountSetup = () => {
 
                     {/* Trình chỉnh sửa ảnh */}
                     {imageSrc && (
-                        <Box sx={{ flex: "2", display: "flex", flexDirection: "column", gap: "10px" }}>
-                          <Typography variant="h6" sx={{ textAlign: "center", fontWeight: "bold" }}>
+                        <Box sx={{
+                          flex: "2",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "10px"
+                        }}>
+                          <Typography variant="h6" sx={{
+                            textAlign: "center",
+                            fontWeight: "bold"
+                          }}>
                             Edit Avatar
                           </Typography>
-                          <Box sx={{ height: "300px" }}>
+                          <Box sx={{height: "300px"}}>
                             <PinturaEditor
                                 {...getEditorDefaults()}
                                 src={imageSrc}
                                 imageCropAspectRatio={1}
                                 outputWidth={1024}
                                 outputHeight={1024}
-                                onProcess={(res) => setInlineResult(URL.createObjectURL(res.dest))}
+                                onProcess={(res) => setInlineResult(
+                                    URL.createObjectURL(res.dest))}
                             />
                           </Box>
                         </Box>
@@ -335,10 +345,19 @@ const AccountSetup = () => {
 
                     {/* Ảnh chỉnh sửa xong */}
                     {inlineResult && (
-                        <Box sx={{ flex: "1", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <Box sx={{
+                          flex: "1",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center"
+                        }}>
                           <Typography
                               variant="h6"
-                              sx={{ textAlign: "center", fontWeight: "bold", marginBottom: "10px" }}
+                              sx={{
+                                textAlign: "center",
+                                fontWeight: "bold",
+                                marginBottom: "10px"
+                              }}
                           >
                             Edited Image
                           </Typography>
@@ -355,10 +374,48 @@ const AccountSetup = () => {
                     )}
                   </Box>
 
-
               )}
               {step === 3 && (
-                  <UserCV/>
+                  <UserCV
+                      name="Nguyễn Nhật Minh"
+                      position="JAVA DEVELOPER"
+                      phone="0901 611 585"
+                      email="nnminh257@gmail.com"
+                      github="github.com/minknhom"
+                      location="Biên Hòa, Đồng Nai, Việt Nam"
+                      objective="To secure a position as a Backend Java Web Developer..."
+                      skills={[
+                        "Proficient in Java programming",
+                        "Knowledge of Spring Framework",
+                        "Web Development: Servlets, JSP, Thymeleaf",
+                        "HTML, CSS, JavaScript, JQuery",
+                        "Databases: SQL Server, MySQL",
+                        "Tools: Git, SourceTree",
+                        "Good English communication",
+                      ]}
+                      education={[
+                        {
+                          name: "University of Information Technology",
+                          detail: "Faculty of Information System",
+                          duration: "9/2019 - Present",
+                        },
+                        {
+                          name: "FPT Software Academy",
+                          detail: "Fullstack Java Web Developer",
+                          duration: "3/2023 - Present",
+                        },
+                      ]}
+                      projects={[
+                        {
+                          name: "Library Management Swing App",
+                          duration: "3/2022 - 5/2022",
+                          position: "Developer",
+                          description: "Designed the UI and implemented core functions...",
+                          link: "https://github.com/PhamNhuLong/java_IS216.m22.6",
+                        },
+                      ]}
+                  />
+
               )}
             </Box>
           </CSSTransition>
