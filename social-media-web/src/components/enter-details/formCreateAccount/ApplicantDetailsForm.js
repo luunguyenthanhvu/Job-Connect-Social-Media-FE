@@ -13,7 +13,7 @@ import {CKEditor} from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FemaleIcon from '@mui/icons-material/Female';
-import MaleIcon from '@mui/icons-material/Male';
+import MaleIcon from '@mui/icons-material/Male'
 
 const ApplicantForm = ({formValue, setFormValue, handleChange}) => {
 
@@ -179,6 +179,9 @@ const ApplicantForm = ({formValue, setFormValue, handleChange}) => {
                 name="dob"
                 type="date"
                 value={formValue.dob}
+                InputLabelProps={{
+                  shrink: true,
+                }}
                 onChange={handleChange}
             />
           </Grid>

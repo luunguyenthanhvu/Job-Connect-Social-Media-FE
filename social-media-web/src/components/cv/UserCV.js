@@ -31,7 +31,7 @@ const UserCV = ({
   position,
   phone,
   email,
-  github,
+  website,
   location,
   objective,
   skills,
@@ -108,7 +108,7 @@ const UserCV = ({
 
             <span style={styles.icon_with_text}>
               <LanguageIcon style={styles.iconStyle}/>
-              <span>{github}</span>
+              <span>{website}</span>
             </span>
 
             <span style={styles.icon_with_text}>
