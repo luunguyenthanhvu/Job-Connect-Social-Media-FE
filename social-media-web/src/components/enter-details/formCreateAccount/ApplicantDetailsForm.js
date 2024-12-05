@@ -178,7 +178,6 @@ const ApplicantForm = ({formValue, setFormValue, handleChange}) => {
                 label="Date of Birth"
                 name="dob"
                 type="date"
-                InputLabelProps={{shrink: true}}
                 value={formValue.dob}
                 onChange={handleChange}
             />

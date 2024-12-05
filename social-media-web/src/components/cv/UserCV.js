@@ -96,25 +96,25 @@ const UserCV = ({
             {position}
           </Typography>
           <Typography variant="body2" sx={{marginTop: "20px"}}>
-            <div style={styles.icon_with_text}>
+            <span style={styles.icon_with_text}>
               <PhoneIcon style={styles.iconStyle}/>
               <span>{phone}</span>
-            </div>
+            </span>
 
-            <div style={styles.icon_with_text}>
+            <span style={styles.icon_with_text}>
               <EmailIcon style={styles.iconStyle}/>
               <span>{email}</span>
-            </div>
+            </span>
 
-            <div style={styles.icon_with_text}>
+            <span style={styles.icon_with_text}>
               <LanguageIcon style={styles.iconStyle}/>
               <span>{github}</span>
-            </div>
+            </span>
 
-            <div style={styles.icon_with_text}>
+            <span style={styles.icon_with_text}>
               <LocationOnIcon style={styles.iconStyle}/>
               <span>{location}</span>
-            </div>
+            </span>
           </Typography>
           <Divider
               sx={{backgroundColor: "#fff", margin: "20px 0", width: "100%"}}
@@ -147,7 +147,7 @@ const UserCV = ({
           </Typography>
           <Typography variant="body2" gutterBottom>
             {skills.map((skill, index) => (
-                <div key={index}>- {skill}</div>
+                <span key={index}>- {skill}</span>
             ))}
           </Typography>
         </Box>

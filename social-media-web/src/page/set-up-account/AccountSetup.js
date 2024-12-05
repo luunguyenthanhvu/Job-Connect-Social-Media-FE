@@ -12,17 +12,17 @@ import {
 import {CSSTransition, TransitionGroup} from "react-transition-group";
 import "./style.css";
 import AppLogo from "../../components/icons/AppLogo";
-import {PinturaEditor} from '@pqina/react-pintura';
-import {getEditorDefaults} from '@pqina/pintura';
 import UserCV from "../../components/cv/UserCV"
 import '@pqina/pintura/pintura.css';
 import EmployerDetailsForm
-  from "../../components/enter-details/EmployerDetailsForm";
+  from "../../components/enter-details/formCreateAccount/EmployerDetailsForm";
 import ApplicantDetailsForm
-  from "../../components/enter-details/ApplicantDetailsForm";
+  from "../../components/enter-details/formCreateAccount/ApplicantDetailsForm";
+import ImageEditor from "../../components/enter-details/imageEditor/ImageEditor"
 
 const AccountSetup = () => {
-  const [inlineResult, setInlineResult] = useState();
+  const nodeRef = React.useRef(null);
+  const [inlineResult, setInlineResult] = useState("");
   const [imageSrc, setImageSrc] = useState(null);
 
   const handleImageChange = (e) => {
@@ -51,6 +51,7 @@ const AccountSetup = () => {
     lastname: "",
     dob: "",
     gender: "",
+    website: "",
     objective: "",
     address: "",
     educationRequestDTO: "",
@@ -69,12 +70,12 @@ const AccountSetup = () => {
 
   // For applicant
   const handleChangeApplicant = (e) => {
-    const newFormValue = {
-      ...formValueApplicant,
-      [e.target.name]: e.target.value
-    };
-    setFormValueApplicant(newFormValue);
-    console.log(setFormValueApplicant)
+    const {name, value} = e.target;
+    setFormValueApplicant((prevState) => ({
+      ...prevState,
+      [name]: value,  // Cập nhật giá trị của trường tương ứng trong formValueApplicant
+    }));
+    console.log(formValueApplicant)
   };
 
   // For employer
@@ -165,180 +166,72 @@ const AccountSetup = () => {
         </Stepper>
 
         <TransitionGroup>
-          <CSSTransition key={step} timeout={500} classNames="fade">
-            <Box>
-              {step === 0 && (
-                  <Box textAlign="center">
-                    <Typography variant="h6">Step 1: Choose Account
-                      Type</Typography>
-                    <Typography variant="body1" sx={{mt: 2}}>
-                      Selected: {tabValue === 0 ? "Employer" : "Applicant"}
-                    </Typography>
-                  </Box>
-              )}
-              {step === 1 && <Box>{renderFormFields()}</Box>}
-              {step === 2 && (
-                  <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "20px",
-                        padding: "20px",
-                        border: "1px solid #ddd",
-                        borderRadius: "10px",
-                        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                        backgroundColor: "#f9f9f9",
-                        width: "90%",
-                        maxWidth: "1200px",
-                        margin: "0 auto",
-                      }}
-                  >
-                    {/* Phần chọn ảnh */}
-                    <Box
-                        sx={{
-                          flex: "1",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          gap: "10px",
-                          border: "2px dashed #ccc",
-                          borderRadius: "10px",
-                          justifyContent: "center",
-                          background: imageSrc
-                              ? `url(${imageSrc}) center/cover no-repeat`
-                              : "#f0f0f0",
-                          height: "300px",
-                          position: "relative",
-                        }}
-                    >
-                      {!imageSrc && (
-                          <Typography
-                              sx={{
-                                color: "#666",
-                                textAlign: "center",
-                                fontWeight: "bold",
-                              }}
-                          >
-                            Click to Upload
-                          </Typography>
-                      )}
-                      <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageChange}
-                          style={{
-                            opacity: 0,
-                            position: "absolute",
-                            width: "100%",
-                            height: "100%",
-                            cursor: "pointer",
-                          }}
-                      />
+          <CSSTransition key={step} nodeRef={nodeRef} timeout={500}
+                         classNames="fade">
+            <div ref={nodeRef}>
+              <Box>
+                {step === 0 && (
+                    <Box textAlign="center">
+                      <Typography variant="h6">Step 1: Choose Account
+                        Type</Typography>
+                      <Typography variant="body1" sx={{mt: 2}}>
+                        Selected: {tabValue === 0 ? "Employer" : "Applicant"}
+                      </Typography>
                     </Box>
+                )}
+                {step === 1 && <Box>{renderFormFields()}</Box>}
+                {step === 2 && (
+                    <ImageEditor
+                        imageSrc={imageSrc}
+                        handleImageChange={handleImageChange}
+                        setInlineResult={setInlineResult}
+                        inlineResult={inlineResult}
+                    />
+                )}
+                {step === 3 && (
+                    <UserCV
+                        name="Nguyễn Nhật Minh"
+                        position="JAVA DEVELOPER"
+                        phone="0901 611 585"
+                        email="nnminh257@gmail.com"
+                        website="github.com/minknhom"
+                        location="Biên Hòa, Đồng Nai, Việt Nam"
+                        objective="To secure a position as a Backend Java Web Developer..."
+                        skills={[
+                          "Proficient in Java programming",
+                          "Knowledge of Spring Framework",
+                          "Web Development: Servlets, JSP, Thymeleaf",
+                          "HTML, CSS, JavaScript, JQuery",
+                          "Databases: SQL Server, MySQL",
+                          "Tools: Git, SourceTree",
+                          "Good English communication",
+                        ]}
+                        education={[
+                          {
+                            name: "University of Information Technology",
+                            detail: "Faculty of Information System",
+                            duration: "9/2019 - Present",
+                          },
+                          {
+                            name: "FPT Software Academy",
+                            detail: "Fullstack Java Web Developer",
+                            duration: "3/2023 - Present",
+                          },
+                        ]}
+                        projects={[
+                          {
+                            name: "Library Management Swing App",
+                            duration: "3/2022 - 5/2022",
+                            position: "Developer",
+                            description: "Designed the UI and implemented core functions...",
+                            link: "https://github.com/PhamNhuLong/java_IS216.m22.6",
+                          },
+                        ]}
+                    />
 
-                    {/* Trình chỉnh sửa ảnh */}
-                    {imageSrc && (
-                        <Box sx={{
-                          flex: "2",
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "10px"
-                        }}>
-                          <Typography variant="h6" sx={{
-                            textAlign: "center",
-                            fontWeight: "bold"
-                          }}>
-                            Edit Avatar
-                          </Typography>
-                          <Box sx={{height: "300px"}}>
-                            <PinturaEditor
-                                {...getEditorDefaults()}
-                                src={imageSrc}
-                                imageCropAspectRatio={1}
-                                outputWidth={1024}
-                                outputHeight={1024}
-                                onProcess={(res) => setInlineResult(
-                                    URL.createObjectURL(res.dest))}
-                            />
-                          </Box>
-                        </Box>
-                    )}
-
-                    {/* Ảnh chỉnh sửa xong */}
-                    {inlineResult && (
-                        <Box sx={{
-                          flex: "1",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center"
-                        }}>
-                          <Typography
-                              variant="h6"
-                              sx={{
-                                textAlign: "center",
-                                fontWeight: "bold",
-                                marginBottom: "10px"
-                              }}
-                          >
-                            Edited Image
-                          </Typography>
-                          <img
-                              src={inlineResult}
-                              alt="Edited"
-                              style={{
-                                width: "100%",
-                                borderRadius: "10px",
-                                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-                              }}
-                          />
-                        </Box>
-                    )}
-                  </Box>
-
-              )}
-              {step === 3 && (
-                  <UserCV
-                      name="Nguyễn Nhật Minh"
-                      position="JAVA DEVELOPER"
-                      phone="0901 611 585"
-                      email="nnminh257@gmail.com"
-                      github="github.com/minknhom"
-                      location="Biên Hòa, Đồng Nai, Việt Nam"
-                      objective="To secure a position as a Backend Java Web Developer..."
-                      skills={[
-                        "Proficient in Java programming",
-                        "Knowledge of Spring Framework",
-                        "Web Development: Servlets, JSP, Thymeleaf",
-                        "HTML, CSS, JavaScript, JQuery",
-                        "Databases: SQL Server, MySQL",
-                        "Tools: Git, SourceTree",
-                        "Good English communication",
-                      ]}
-                      education={[
-                        {
-                          name: "University of Information Technology",
-                          detail: "Faculty of Information System",
-                          duration: "9/2019 - Present",
-                        },
-                        {
-                          name: "FPT Software Academy",
-                          detail: "Fullstack Java Web Developer",
-                          duration: "3/2023 - Present",
-                        },
-                      ]}
-                      projects={[
-                        {
-                          name: "Library Management Swing App",
-                          duration: "3/2022 - 5/2022",
-                          position: "Developer",
-                          description: "Designed the UI and implemented core functions...",
-                          link: "https://github.com/PhamNhuLong/java_IS216.m22.6",
-                        },
-                      ]}
-                  />
-
-              )}
-            </Box>
+                )}
+              </Box>
+            </div>
           </CSSTransition>
         </TransitionGroup>
 
