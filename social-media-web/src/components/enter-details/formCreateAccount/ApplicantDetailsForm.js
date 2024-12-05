@@ -196,7 +196,7 @@ const ApplicantForm = ({formValue, setFormValue, handleChange}) => {
           </Grid>
           <Grid
               item
-              xs={12}
+              xs={6}
               sx={{display: 'flex', alignItems: 'center', gap: 2}}
           >
             <Typography sx={{mb: 0}}>Gender:</Typography>
@@ -225,7 +225,15 @@ const ApplicantForm = ({formValue, setFormValue, handleChange}) => {
             </RadioGroup>
           </Grid>
 
-
+          <Grid item xs={6}>
+            <TextField
+                fullWidth
+                label="Phone Number"
+                name="phoneNum"
+                value={formValue.phoneNum}
+                onChange={handleChange}
+            />
+          </Grid>
           <Grid item xs={12}>
             <TextField
                 fullWidth

@@ -40,10 +40,7 @@ const AccountSetup = () => {
   const [step, setStep] = useState(0);
 
   const [formValueEmployer, setFormValueEmployer] = useState({
-    description: "",
-    website: "",
-    country: "",
-    industry: "",
+    description: "", website: "", country: "", industry: "",
   });
 
   const [formValueApplicant, setFormValueApplicant] = useState({
@@ -57,7 +54,8 @@ const AccountSetup = () => {
     educationRequestDTO: "",
     workExperienceRequestDTO: "",
     projectRequestDTO: "",
-    skills: ""
+    skills: "",
+    phoneNum: ""
   });
 
   const steps = ["Account Type", "Enter Details", "Choose Avatar",
@@ -72,8 +70,7 @@ const AccountSetup = () => {
   const handleChangeApplicant = (e) => {
     const {name, value} = e.target;
     setFormValueApplicant((prevState) => ({
-      ...prevState,
-      [name]: value,  // Cập nhật giá trị của trường tương ứng trong formValueApplicant
+      ...prevState, [name]: value,  // Cập nhật giá trị của trường tương ứng trong formValueApplicant
     }));
     console.log(formValueApplicant)
   };
@@ -97,7 +94,13 @@ const AccountSetup = () => {
   };
 
   const handleNextStep = () => {
-    setStep((prev) => prev + 1);
+    if (step === 2 && isFormValid()) {
+      alert(
+          "Please fill in all required fields before proceeding to the next step.");
+      return;
+    }
+
+    setStep((prevStep) => prevStep + 1);
   };
 
   const handlePreviousStep = () => {
@@ -110,148 +113,137 @@ const AccountSetup = () => {
 
   const renderFormFields = () => {
     if (tabValue === 0) {
-      return (
-          <EmployerDetailsForm
-              formValue={formValueEmployer}
-              onChange={handleInputEmployerChange}
-              onDescriptionChange={handleDescriptionEmployerChange}
-          />
-      );
+      return (<EmployerDetailsForm
+          formValue={formValueEmployer}
+          onChange={handleInputEmployerChange}
+          onDescriptionChange={handleDescriptionEmployerChange}
+      />);
     }
 
     if (tabValue === 1) {
-      return (
-          <ApplicantDetailsForm
-              formValue={formValueApplicant}
-              setFormValue={setFormValueApplicant}
-              handleChange={handleChangeApplicant}
-          />
-      );
+      return (<ApplicantDetailsForm
+          formValue={formValueApplicant}
+          setFormValue={setFormValueApplicant}
+          handleChange={handleChangeApplicant}
+      />);
     }
   };
 
-  return (
-      <Box sx={{
-        maxWidth: "100%",
-        backgroundColor: "#fff",
-        margin: "auto",
-        padding: "30px 200px",
-        mt: 4
-      }}>
-        <Typography
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-            variant="h4"
-            align="center"
-            gutterBottom
-        >
-          <AppLogo width={60} height={60}/>
-          Create Your Account
-        </Typography>
+  // validate for form
+  const isFormValid = () => {
+    console.log("Validating form...");
+    console.log("Form values:", formValueApplicant);
 
-        <Tabs value={tabValue} onChange={handleTabChange} centered>
-          <Tab label="Employer"/>
-          <Tab label="Applicant"/>
-        </Tabs>
+    const requiredFields = ["firstname", "lastname", "dob", "gender", "address",
+      "skills", "objective",];
 
-        <Stepper activeStep={step} sx={{my: 3}}>
-          {steps.map((label, index) => (
-              <Step key={index}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-          ))}
-        </Stepper>
+    for (const field of requiredFields) {
+      if (!formValueApplicant[field] || formValueApplicant[field].trim()
+          === '') {
+        console.log(`Field ${field} is invalid`);
+        return false;
+      }
+    }
 
-        <TransitionGroup>
-          <CSSTransition key={step} nodeRef={nodeRef} timeout={500}
-                         classNames="fade">
-            <div ref={nodeRef}>
-              <Box>
-                {step === 0 && (
-                    <Box textAlign="center">
-                      <Typography variant="h6">Step 1: Choose Account
-                        Type</Typography>
-                      <Typography variant="body1" sx={{mt: 2}}>
-                        Selected: {tabValue === 0 ? "Employer" : "Applicant"}
-                      </Typography>
-                    </Box>
-                )}
-                {step === 1 && <Box>{renderFormFields()}</Box>}
-                {step === 2 && (
-                    <ImageEditor
-                        imageSrc={imageSrc}
-                        handleImageChange={handleImageChange}
-                        setInlineResult={setInlineResult}
-                        inlineResult={inlineResult}
-                    />
-                )}
-                {step === 3 && (
-                    <UserCV
-                        name="Nguyễn Nhật Minh"
-                        position="JAVA DEVELOPER"
-                        phone="0901 611 585"
-                        email="nnminh257@gmail.com"
-                        website="github.com/minknhom"
-                        location="Biên Hòa, Đồng Nai, Việt Nam"
-                        objective="To secure a position as a Backend Java Web Developer..."
-                        skills={[
-                          "Proficient in Java programming",
-                          "Knowledge of Spring Framework",
-                          "Web Development: Servlets, JSP, Thymeleaf",
-                          "HTML, CSS, JavaScript, JQuery",
-                          "Databases: SQL Server, MySQL",
-                          "Tools: Git, SourceTree",
-                          "Good English communication",
-                        ]}
-                        education={[
-                          {
-                            name: "University of Information Technology",
-                            detail: "Faculty of Information System",
-                            duration: "9/2019 - Present",
-                          },
-                          {
-                            name: "FPT Software Academy",
-                            detail: "Fullstack Java Web Developer",
-                            duration: "3/2023 - Present",
-                          },
-                        ]}
-                        projects={[
-                          {
-                            name: "Library Management Swing App",
-                            duration: "3/2022 - 5/2022",
-                            position: "Developer",
-                            description: "Designed the UI and implemented core functions...",
-                            link: "https://github.com/PhamNhuLong/java_IS216.m22.6",
-                          },
-                        ]}
-                    />
+    if (!formValueApplicant.educationRequestDTO?.length
+        || !formValueApplicant.workExperienceRequestDTO?.length
+        || !formValueApplicant.projectRequestDTO?.length) {
+      console.log("One of the lists (education/work/project) is invalid");
+      return false;
+    }
 
-                )}
-              </Box>
-            </div>
-          </CSSTransition>
-        </TransitionGroup>
+    console.log("Form is valid");
+    return true;
+  };
 
-        <Box sx={{mt: 3, display: "flex", justifyContent: "space-between"}}>
-          <Button variant="outlined" disabled={step === 0}
-                  onClick={handlePreviousStep}>
-            Back
-          </Button>
-          {step === steps.length - 1 ? (
-              <Button variant="contained" onClick={handleSubmit}>
-                Submit
-              </Button>
-          ) : (
-              <Button variant="contained" onClick={handleNextStep}>
-                Next
-              </Button>
-          )}
-        </Box>
-      </Box>
-  );
+  return (<Box sx={{
+    maxWidth: "100%",
+    backgroundColor: "#fff",
+    margin: "auto",
+    padding: "30px 200px",
+    mt: 4
+  }}>
+    <Typography
+        sx={{
+          display: "flex", justifyContent: "center", alignItems: "center"
+        }}
+        variant="h4"
+        align="center"
+        gutterBottom
+    >
+      <AppLogo width={60} height={60}/>
+      Create Your Account
+    </Typography>
+
+    <Tabs value={tabValue} onChange={handleTabChange} centered>
+      <Tab label="Employer"/>
+      <Tab label="Applicant"/>
+    </Tabs>
+
+    <Stepper activeStep={step} sx={{my: 3}}>
+      {steps.map((label, index) => (<Step key={index}>
+        <StepLabel>{label}</StepLabel>
+      </Step>))}
+    </Stepper>
+
+    <TransitionGroup>
+      <CSSTransition key={step} nodeRef={nodeRef} timeout={500}
+                     classNames="fade">
+        <div ref={nodeRef}>
+          <Box>
+            {step === 0 && (<Box textAlign="center">
+              <Typography variant="h6">Step 1: Choose Account
+                Type</Typography>
+              <Typography variant="body1" sx={{mt: 2}}>
+                Selected: {tabValue === 0 ? "Employer" : "Applicant"}
+              </Typography>
+            </Box>)}
+            {step === 1 && <Box>{renderFormFields()}</Box>}
+            {step === 2 && (<ImageEditor
+                imageSrc={imageSrc}
+                handleImageChange={handleImageChange}
+                setInlineResult={setInlineResult}
+                inlineResult={inlineResult}
+            />)}
+            {step === 3 && (
+
+                <UserCV
+                    name={`${formValueApplicant.firstname} ${formValueApplicant.lastname}`}
+                    position={formValueApplicant.skills?.split(",")[0]
+                        || "Position"}
+                    phone={formValueApplicant.phoneNum}// Thêm trường điện thoại trong form nếu cần
+                    email="nnminh257@gmail.com" // Thêm trường email trong form nếu cần
+                    website={formValueApplicant.website || "N/A"}
+                    location={formValueApplicant.address || "N/A"}
+                    objective={formValueApplicant.objective
+                        || "No objective provided"}
+                    skills={formValueApplicant.skills
+                    ?.split(",")
+                    .map(skill => skill.trim()) || []}
+                    education={formValueApplicant.educationRequestDTO || []}
+                    projects={formValueApplicant.projectRequestDTO || []}
+                />
+
+            )}
+          </Box>
+        </div>
+      </CSSTransition>
+    </TransitionGroup>
+
+    <Box sx={{mt: 3, display: "flex", justifyContent: "space-between"}}>
+      <Button variant="outlined" disabled={step === 0}
+              onClick={handlePreviousStep}>
+        Back
+      </Button>
+      {step === steps.length - 1 ? (
+          <Button variant="contained" onClick={handleSubmit}>
+            Submit
+          </Button>) : (
+          <Button variant="contained" onClick={handleNextStep}>
+            Next
+          </Button>)}
+    </Box>
+  </Box>);
 };
 
 export default AccountSetup;
