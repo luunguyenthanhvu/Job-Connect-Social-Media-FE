@@ -96,6 +96,7 @@ const MainContent = () => {
         {/*  News Feed*/}
         {mockPosts.map(post => (
             <PostCard
+                key={post.id}
                 post={post}
                 maxWidth="100%"
             />

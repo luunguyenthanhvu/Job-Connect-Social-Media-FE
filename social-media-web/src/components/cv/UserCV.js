@@ -129,7 +129,7 @@ const UserCV = ({
           >
             OBJECTIVE
           </Typography>
-          <Typography variant="body3" sx={{textAlign: "justify"}}>
+          <Typography variant="body2" gutterBottom>
             {objective}
           </Typography>
           <Divider
@@ -145,7 +145,7 @@ const UserCV = ({
           >
             SKILLS
           </Typography>
-          <Typography variant="body3" sx={{textAlign: "left"}}>
+          <Typography variant="body2" gutterBottom>
             {skills.map((skill, index) => (
                 <div key={index}>- {skill}</div>
             ))}

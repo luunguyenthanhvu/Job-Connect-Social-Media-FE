@@ -11,7 +11,6 @@ import Navbar from './components/navbar/Navbar';
 import {
   AccountSetup,
   EmployerProfile,
-
   Friend,
   Home,
   JobPage,

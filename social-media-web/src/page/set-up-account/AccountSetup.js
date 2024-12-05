@@ -2,24 +2,24 @@ import React, {useState} from "react";
 import {
   Box,
   Button,
-  Grid,
   Step,
   StepLabel,
   Stepper,
   Tab,
   Tabs,
-  TextField,
   Typography
 } from "@mui/material";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
-import {CKEditor} from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import "./style.css";
 import AppLogo from "../../components/icons/AppLogo";
 import {PinturaEditor} from '@pqina/react-pintura';
 import {getEditorDefaults} from '@pqina/pintura';
 import UserCV from "../../components/cv/UserCV"
 import '@pqina/pintura/pintura.css';
+import EmployerDetailsForm
+  from "../../components/enter-details/EmployerDetailsForm";
+import ApplicantDetailsForm
+  from "../../components/enter-details/ApplicantDetailsForm";
 
 const AccountSetup = () => {
   const [inlineResult, setInlineResult] = useState();
@@ -47,15 +47,16 @@ const AccountSetup = () => {
   });
 
   const [formValueApplicant, setFormValueApplicant] = useState({
-    description: "",
     firstname: "",
     lastname: "",
     dob: "",
-    summary: "",
-    educationList: "",
-    workExperiences: "",
-    skills: "",
-    certifications: "",
+    gender: "",
+    objective: "",
+    address: "",
+    educationRequestDTO: "",
+    workExperienceRequestDTO: "",
+    projectRequestDTO: "",
+    skills: ""
   });
 
   const steps = ["Account Type", "Enter Details", "Choose Avatar",
@@ -66,6 +67,17 @@ const AccountSetup = () => {
     setStep(0);
   };
 
+  // For applicant
+  const handleChangeApplicant = (e) => {
+    const newFormValue = {
+      ...formValueApplicant,
+      [e.target.name]: e.target.value
+    };
+    setFormValueApplicant(newFormValue);
+    console.log(setFormValueApplicant)
+  };
+
+  // For employer
   const handleInputEmployerChange = (event) => {
     setFormValueEmployer(
         {...formValueEmployer, [event.target.name]: event.target.value});
@@ -98,114 +110,23 @@ const AccountSetup = () => {
   const renderFormFields = () => {
     if (tabValue === 0) {
       return (
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="body1" gutterBottom>
-                Description:
-              </Typography>
-              <CKEditor
-                  editor={ClassicEditor}
-                  data={formValueEmployer.description}
-                  onChange={(event, editor) => {
-                    const data = editor.getData();
-                    handleDescriptionEmployerChange(data);
-                  }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                  fullWidth
-                  label="Website"
-                  name="website"
-                  value={formValueEmployer.website}
-                  onChange={handleInputEmployerChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                  fullWidth
-                  label="Country"
-                  name="country"
-                  value={formValueEmployer.country}
-                  onChange={handleInputEmployerChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                  fullWidth
-                  label="Industry"
-                  name="industry"
-                  value={formValueEmployer.industry}
-                  onChange={handleInputEmployerChange}
-              />
-            </Grid>
-          </Grid>
+          <EmployerDetailsForm
+              formValue={formValueEmployer}
+              onChange={handleInputEmployerChange}
+              onDescriptionChange={handleDescriptionEmployerChange}
+          />
       );
     }
 
     if (tabValue === 1) {
       return (
-          <Grid container spacing={2}
-                sx={{
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-          >
-            <Box sx={{
-              width: '100%',
-              display: 'flex',
-              gap: '5px',
-              margin: '5px 10px',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>
-              <Grid item xs={16}>
-                <TextField
-                    fullWidth
-                    label="First Name"
-                    name="firstname"
-                    value={formValueApplicant.firstname}
-                    onChange={handleInputApplicantChange}
-                />
-              </Grid>
-              <Grid item xs={16}>
-                <TextField
-                    fullWidth
-                    label="Last Name"
-                    name="lastname"
-                    value={formValueApplicant.lastname}
-                    onChange={handleInputApplicantChange}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                    fullWidth
-                    label="Date of Birth"
-                    name="dob"
-                    type="date"
-                    InputLabelProps={{shrink: true}}
-                    value={formValueApplicant.dob}
-                    onChange={handleInputApplicantChange}
-                />
-              </Grid>
-            </Box>
-            <Grid item xs={12}>
-              <Typography variant="body1" gutterBottom>
-                Description:
-              </Typography>
-              <CKEditor
-                  editor={ClassicEditor}
-                  data={formValueApplicant.description}
-                  onChange={(event, editor) => {
-                    const data = editor.getData();
-                    handleDescriptionApplicantChange(data);
-                  }}
-              />
-            </Grid>
-          </Grid>
+          <ApplicantDetailsForm
+              formValue={formValueApplicant}
+              setFormValue={setFormValueApplicant}
+              handleChange={handleChangeApplicant}
+          />
       );
     }
-
   };
 
   return (

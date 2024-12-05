@@ -76,7 +76,7 @@ export default function SignUp(props) {
   const navigate = useNavigate();
 
   // Alert info for user
-  const [openAlert, setOpenAlert] = React.useState(false);  // State for controlling Snackbar visibility
+  const [openAlert, setOpenAlert] = React.useState(false);
   const [alertMessage, setAlertMessage] = React.useState('');
   const handleClickOpen = () => {
     setOpen(true);

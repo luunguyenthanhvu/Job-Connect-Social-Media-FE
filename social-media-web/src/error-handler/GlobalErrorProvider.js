@@ -8,11 +8,13 @@ const GlobalErrorContext = createContext();
 export const GlobalErrorProvider = ({children}) => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
   const handleError = useCallback((error) => {
     const errorCode = error?.response?.data?.code;
     const errorMessage = error?.response?.data?.message
         || 'An unexpected error occurred';
     setError({message: errorMessage});
+
     if (errorCode === 1010) {
       setTimeout(() => {
         navigate('/verify');
@@ -36,17 +38,14 @@ export const GlobalErrorProvider = ({children}) => {
         {children}
 
         {/* Snackbar to display error */}
-        <Snackbar
-            open={error !== null}
-            autoHideDuration={5000} // 5 seconds duration
-            onClose={clearError}
-            anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-        >
-          {error !== null && (
+        <Snackbar open={error !== null} autoHideDuration={5000}
+                  onClose={clearError}
+                  anchorOrigin={{vertical: 'top', horizontal: 'center'}}>
+          {error ? (
               <Alert onClose={clearError} severity="error" sx={{width: '100%'}}>
                 {error?.message || 'An unexpected error occurred'}
               </Alert>
-          )}
+          ) : null}
         </Snackbar>
       </GlobalErrorContext.Provider>
   );
