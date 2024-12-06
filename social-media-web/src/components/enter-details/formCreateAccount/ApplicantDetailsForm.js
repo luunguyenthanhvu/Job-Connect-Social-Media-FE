@@ -185,15 +185,6 @@ const ApplicantForm = ({formValue, setFormValue, handleChange}) => {
                 onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-                fullWidth
-                label="Position"
-                name="position"
-                value={formValue.position}
-                onChange={handleChange}
-            />
-          </Grid>
           <Grid
               item
               xs={6}
@@ -224,7 +215,15 @@ const ApplicantForm = ({formValue, setFormValue, handleChange}) => {
               />
             </RadioGroup>
           </Grid>
-
+          <Grid item xs={6}>
+            <TextField
+                fullWidth
+                label="Email User"
+                name="emailUser"
+                value={formValue.emailUser}
+                onChange={handleChange}
+            />
+          </Grid>
           <Grid item xs={6}>
             <TextField
                 fullWidth
@@ -234,12 +233,21 @@ const ApplicantForm = ({formValue, setFormValue, handleChange}) => {
                 onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <TextField
                 fullWidth
                 label="Address"
                 name="address"
                 value={formValue.address}
+                onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField
+                fullWidth
+                label="Position"
+                name="position"
+                value={formValue.position}
                 onChange={handleChange}
             />
           </Grid>
@@ -300,7 +308,7 @@ const ApplicantForm = ({formValue, setFormValue, handleChange}) => {
           description: "",
         })}
 
-        {renderList("projects", {
+        {renderList("project", {
           projectName: "",
           position: "",
           date: "",

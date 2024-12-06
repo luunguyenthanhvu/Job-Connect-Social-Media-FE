@@ -19,6 +19,25 @@ import EmployerDetailsForm
 import ApplicantDetailsForm
   from "../../components/enter-details/formCreateAccount/ApplicantDetailsForm";
 import ImageEditor from "../../components/enter-details/imageEditor/ImageEditor"
+import html2pdf from 'html2pdf.js';
+
+const downloadCV = () => {
+  const element = document.getElementById("cv-container");  // ID của phần tử chứa CV
+
+  const options = {
+    margin: 0,  // Giảm margin nếu cần
+    filename: 'CV.pdf',
+    image: {type: 'jpeg', quality: 0.98},
+    html2canvas: {scale: 6},
+    jsPDF: {
+      unit: 'mm',
+      format: 'a4',
+      orientation: 'portrait'  // Đảm bảo orientation là portrait (dọc)
+    }
+  };
+
+  html2pdf().from(element).set(options).save();
+}
 
 const AccountSetup = () => {
   const nodeRef = React.useRef(null);
@@ -51,11 +70,13 @@ const AccountSetup = () => {
     website: "",
     objective: "",
     address: "",
-    educationRequestDTO: "",
-    workExperienceRequestDTO: "",
-    projectRequestDTO: "",
+    emailUser: "",
+    education: [],
+    workExperience: [],
+    project: [],
     skills: "",
-    phoneNum: ""
+    phoneNum: "",
+    position: ""
   });
 
   const steps = ["Account Type", "Enter Details", "Choose Avatar",
@@ -70,7 +91,7 @@ const AccountSetup = () => {
   const handleChangeApplicant = (e) => {
     const {name, value} = e.target;
     setFormValueApplicant((prevState) => ({
-      ...prevState, [name]: value,  // Cập nhật giá trị của trường tương ứng trong formValueApplicant
+      ...prevState, [name]: value,
     }));
     console.log(formValueApplicant)
   };
@@ -94,12 +115,6 @@ const AccountSetup = () => {
   };
 
   const handleNextStep = () => {
-    if (step === 2 && isFormValid()) {
-      alert(
-          "Please fill in all required fields before proceeding to the next step.");
-      return;
-    }
-
     setStep((prevStep) => prevStep + 1);
   };
 
@@ -127,33 +142,6 @@ const AccountSetup = () => {
           handleChange={handleChangeApplicant}
       />);
     }
-  };
-
-  // validate for form
-  const isFormValid = () => {
-    console.log("Validating form...");
-    console.log("Form values:", formValueApplicant);
-
-    const requiredFields = ["firstname", "lastname", "dob", "gender", "address",
-      "skills", "objective",];
-
-    for (const field of requiredFields) {
-      if (!formValueApplicant[field] || formValueApplicant[field].trim()
-          === '') {
-        console.log(`Field ${field} is invalid`);
-        return false;
-      }
-    }
-
-    if (!formValueApplicant.educationRequestDTO?.length
-        || !formValueApplicant.workExperienceRequestDTO?.length
-        || !formValueApplicant.projectRequestDTO?.length) {
-      console.log("One of the lists (education/work/project) is invalid");
-      return false;
-    }
-
-    console.log("Form is valid");
-    return true;
   };
 
   return (<Box sx={{
@@ -207,22 +195,39 @@ const AccountSetup = () => {
             />)}
             {step === 3 && (
 
-                <UserCV
-                    name={`${formValueApplicant.firstname} ${formValueApplicant.lastname}`}
-                    position={formValueApplicant.skills?.split(",")[0]
-                        || "Position"}
-                    phone={formValueApplicant.phoneNum}// Thêm trường điện thoại trong form nếu cần
-                    email="nnminh257@gmail.com" // Thêm trường email trong form nếu cần
-                    website={formValueApplicant.website || "N/A"}
-                    location={formValueApplicant.address || "N/A"}
-                    objective={formValueApplicant.objective
-                        || "No objective provided"}
-                    skills={formValueApplicant.skills
-                    ?.split(",")
-                    .map(skill => skill.trim()) || []}
-                    education={formValueApplicant.educationRequestDTO || []}
-                    projects={formValueApplicant.projectRequestDTO || []}
-                />
+                <div style={{
+                  width: '80%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  margin: '0 auto'
+                }}>
+                  <div id="cv-container">
+                    <UserCV
+                        img={inlineResult}
+                        name={`${formValueApplicant.firstname} ${formValueApplicant.lastname}`}
+                        position={formValueApplicant.position || "N/A"}
+                        phone={formValueApplicant.phoneNum || "N/A"}
+                        emailUser={formValueApplicant.emailUser || "N/A"}
+                        website={formValueApplicant.website
+                            || "cho tuan an cut"}
+                        location={formValueApplicant.address || "N/A"}
+                        objective={formValueApplicant.objective
+                            || "No objective provided"}
+                        skills={formValueApplicant.skills || ""}
+                        education={formValueApplicant.education || []}
+                        projects={formValueApplicant.project || []}
+                        workExperience={formValueApplicant.workExperience || []}
+                    />
+                  </div>
+                  <button style={{
+                    width: '100px',
+                    padding: '5px 10px',
+                    margin: '10px',
+                    float: 'right'
+                  }} onClick={downloadCV}>Download CV as PDF
+                  </button>
+                </div>
 
             )}
           </Box>
@@ -243,7 +248,8 @@ const AccountSetup = () => {
             Next
           </Button>)}
     </Box>
-  </Box>);
+  </Box>)
+      ;
 };
 
 export default AccountSetup;

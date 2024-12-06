@@ -1,0 +1,30 @@
+
+.project-item {
+  border-radius: 8px; /* Bo góc */
+  padding: 5px 10px;
+}
+
+.project-name {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #333; /* Màu chữ chính */
+}
+
+.project-date {
+  font-style: italic;
+  color: #6c757d; /* Màu xám nhạt */
+  font-size: 0.9rem;
+}
+
+.project-position {
+  font-weight: bold;
+}
+
+.project-position span {
+  font-weight: bold;
+  color: #333; /* Màu chữ bình thường */
+}
+
+.project-description {
+  color: #555; /* Màu xám đậm */
+}
