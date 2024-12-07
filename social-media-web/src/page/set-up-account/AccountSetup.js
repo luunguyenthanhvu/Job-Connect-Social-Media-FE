@@ -69,6 +69,7 @@ const AccountSetup = () => {
     }
   };
 
+  // handle image to base 64
   const [tabValue, setTabValue] = useState(0);
   const [step, setStep] = useState(0);
 

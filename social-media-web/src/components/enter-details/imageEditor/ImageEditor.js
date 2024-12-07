@@ -83,16 +83,35 @@ const ImageEditor = ({
                 Edit Avatar
               </Typography>
               <Box sx={{height: "300px"}}>
+                {/*<PinturaEditor*/}
+                {/*    {...getEditorDefaults()}*/}
+                {/*    src={imageSrc}*/}
+                {/*    imageCropAspectRatio={1}*/}
+                {/*    outputWidth={1024}*/}
+                {/*    outputHeight={1024}*/}
+                {/*    onProcess={(res) => {*/}
+                {/*      const editedImageUrl = URL.createObjectURL(res.dest);*/}
+                {/*      setInlineResult(editedImageUrl);*/}
+                {/*      console.log("Edited Image URL:", editedImageUrl);  // Log the result here*/}
+                {/*    }}*/}
+                {/*/>*/}
                 <PinturaEditor
+                    style={{height: "500px"}}
                     {...getEditorDefaults()}
                     src={imageSrc}
-                    imageCropAspectRatio={1}
-                    outputWidth={1024}
-                    outputHeight={1024}
-                    onProcess={(res) => {
-                      const editedImageUrl = URL.createObjectURL(res.dest);
-                      setInlineResult(editedImageUrl);
-                      console.log("Edited Image URL:", editedImageUrl);  // Log the result here
+                    onProcess={({dest}) => {
+                      fetch(dest)
+                      .then((res) => res.blob())
+                      .then((blob) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          console.log(reader.result); // Base64
+                        };
+                        reader.readAsDataURL(blob);
+                      })
+                      .catch((error) =>
+                          console.error("Error converting to Base64:", error)
+                      );
                     }}
                 />
               </Box>
