@@ -89,8 +89,11 @@ const ImageEditor = ({
                     imageCropAspectRatio={1}
                     outputWidth={1024}
                     outputHeight={1024}
-                    onProcess={(res) => setInlineResult(
-                        URL.createObjectURL(res.dest))}
+                    onProcess={(res) => {
+                      const editedImageUrl = URL.createObjectURL(res.dest);
+                      setInlineResult(editedImageUrl);
+                      console.log("Edited Image URL:", editedImageUrl);  // Log the result here
+                    }}
                 />
               </Box>
             </Box>

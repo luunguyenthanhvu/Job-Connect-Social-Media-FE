@@ -197,7 +197,7 @@ const UserCV = ({
                     <i>{edu.startDate} - {edu.endDate}</i>
                   </Typography>
                   <Typography variant="body2" className="project-position">
-                    Degree: <span>{edu.degree}</span>
+                    <span> Degree: </span> {edu.degree}
                   </Typography>
                   <Typography variant="body2" className="project-description">
                     <span>{edu.fieldOfStudy}</span>
@@ -227,7 +227,7 @@ const UserCV = ({
                     <i>{project.startDate} - {project.endDate}</i>
                   </Typography>
                   <Typography variant="body2" className="project-position">
-                    Position: <span>{project.position}</span>
+                    <span>Position: </span> {project.position}
                   </Typography>
                   <div className="project-description">
                     {parse(project.description)}
@@ -258,7 +258,7 @@ const UserCV = ({
                         </Typography>
                         <Typography variant="body2"
                                     className="project-position">
-                          Position: <span>{work.position}</span>
+                          <span> Position: </span> {work.position}
                         </Typography>
                         <div className="project-description">
                           {parse(work.description)}

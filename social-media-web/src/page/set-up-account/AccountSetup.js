@@ -20,6 +20,10 @@ import ApplicantDetailsForm
   from "../../components/enter-details/formCreateAccount/ApplicantDetailsForm";
 import ImageEditor from "../../components/enter-details/imageEditor/ImageEditor"
 import html2pdf from 'html2pdf.js';
+import MiniEmployerPage from "../profile/MiniEmployerPage";
+import {useLoading} from "../../context/LoadingContext";
+import {useNavigate} from "react-router-dom";
+import {useGlobalError} from "../../error-handler/GlobalErrorProvider";
 
 const downloadCV = () => {
   const element = document.getElementById("cv-container");  // ID của phần tử chứa CV
@@ -40,6 +44,16 @@ const downloadCV = () => {
 }
 
 const AccountSetup = () => {
+  // Loading axios here
+  const {showLoading, hideLoading} = useLoading();
+
+  // Redirect to other page
+  const navigate = useNavigate();
+  // Alert info for user
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState('');
+  const {throwError} = useGlobalError();
+
   const nodeRef = React.useRef(null);
   const [inlineResult, setInlineResult] = useState("");
   const [imageSrc, setImageSrc] = useState(null);
@@ -122,8 +136,16 @@ const AccountSetup = () => {
     setStep((prev) => prev - 1);
   };
 
-  const handleSubmit = () => {
-
+  const handleSubmit = async () => {
+    if (tabValue === 0) {
+      try {
+        showLoading();
+      } catch (error) {
+        throwError(error);
+      } finally {
+        // hideLoading();
+      }
+    }
   };
 
   const renderFormFields = () => {
@@ -143,6 +165,74 @@ const AccountSetup = () => {
       />);
     }
   };
+
+  const renderReviewFields = () => {
+    if (tabValue === 0) {
+      return (
+          <MiniEmployerPage
+              image={inlineResult}
+              formValue={formValueEmployer}
+          />
+      );
+    }
+
+    if (tabValue === 1) {
+      return (
+          <div style={{
+            width: '80%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            margin: '0 auto',
+            position: 'relative', // Đảm bảo nút căn chỉnh chính xác
+          }}>
+            <div id="cv-container">
+              <UserCV
+                  img={inlineResult}
+                  name={`${formValueApplicant.firstname} ${formValueApplicant.lastname}`}
+                  position={formValueApplicant.position || "N/A"}
+                  phone={formValueApplicant.phoneNum || "N/A"}
+                  emailUser={formValueApplicant.emailUser || "N/A"}
+                  website={formValueApplicant.website
+                      || "N/A"}
+                  location={formValueApplicant.address || "N/A"}
+                  objective={formValueApplicant.objective
+                      || "N/A"}
+                  skills={formValueApplicant.skills || "N/A"}
+                  education={formValueApplicant.education || []}
+                  projects={formValueApplicant.project || []}
+                  workExperience={formValueApplicant.workExperience || []}
+              />
+            </div>
+            <button
+                style={{
+                  position: 'absolute', // Định vị nút
+                  top: '10px', // Điều chỉnh khoảng cách so với đầu container
+                  right: '10px', // Căn sát góc phải
+                  width: '150px',
+                  padding: '10px 15px',
+                  backgroundColor: '#007BFF', // Màu xanh dễ nhìn
+                  color: '#fff', // Màu chữ trắng
+                  border: 'none',
+                  borderRadius: '5px',
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Tạo hiệu ứng nổi
+                  transition: 'background-color 0.3s ease, transform 0.2s ease', // Hiệu ứng khi hover
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'} // Thay đổi màu khi hover
+                onMouseOut={(e) => e.target.style.backgroundColor = '#007BFF'} // Trở về màu gốc
+                onMouseDown={(e) => e.target.style.transform = 'scale(0.95)'} // Hiệu ứng khi click
+                onMouseUp={(e) => e.target.style.transform = 'scale(1)'} // Trở về kích thước gốc
+                onClick={downloadCV}
+            >
+              Download CV as PDF
+            </button>
+          </div>
+      );
+    }
+  }
 
   return (<Box sx={{
     maxWidth: "100%",
@@ -193,43 +283,7 @@ const AccountSetup = () => {
                 setInlineResult={setInlineResult}
                 inlineResult={inlineResult}
             />)}
-            {step === 3 && (
-
-                <div style={{
-                  width: '80%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  margin: '0 auto'
-                }}>
-                  <div id="cv-container">
-                    <UserCV
-                        img={inlineResult}
-                        name={`${formValueApplicant.firstname} ${formValueApplicant.lastname}`}
-                        position={formValueApplicant.position || "N/A"}
-                        phone={formValueApplicant.phoneNum || "N/A"}
-                        emailUser={formValueApplicant.emailUser || "N/A"}
-                        website={formValueApplicant.website
-                            || "cho tuan an cut"}
-                        location={formValueApplicant.address || "N/A"}
-                        objective={formValueApplicant.objective
-                            || "No objective provided"}
-                        skills={formValueApplicant.skills || ""}
-                        education={formValueApplicant.education || []}
-                        projects={formValueApplicant.project || []}
-                        workExperience={formValueApplicant.workExperience || []}
-                    />
-                  </div>
-                  <button style={{
-                    width: '100px',
-                    padding: '5px 10px',
-                    margin: '10px',
-                    float: 'right'
-                  }} onClick={downloadCV}>Download CV as PDF
-                  </button>
-                </div>
-
-            )}
+            {step === 3 && (renderReviewFields())}
           </Box>
         </div>
       </CSSTransition>
