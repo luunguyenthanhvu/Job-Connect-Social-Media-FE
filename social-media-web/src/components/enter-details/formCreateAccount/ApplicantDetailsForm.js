@@ -200,16 +200,16 @@ const ApplicantForm = ({formValue, setFormValue, handleChange}) => {
                 sx={{display: 'flex', alignItems: 'center'}}
             >
               <FormControlLabel
-                  value="Male"
+                  value="MALE"
                   control={<Radio/>}
-                  label="Male"
+                  label="MALE"
                   icon={<MaleIcon/>}
                   labelPlacement="end"
               />
               <FormControlLabel
-                  value="Female"
+                  value="FEMALE"
                   control={<Radio/>}
-                  label="Female"
+                  label="FEMALE"
                   icon={<FemaleIcon/>}
                   labelPlacement="end"
               />

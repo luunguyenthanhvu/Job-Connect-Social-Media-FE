@@ -24,6 +24,8 @@ import MiniEmployerPage from "../profile/MiniEmployerPage";
 import {useLoading} from "../../context/LoadingContext";
 import {useNavigate} from "react-router-dom";
 import {useGlobalError} from "../../error-handler/GlobalErrorProvider";
+import axios from "axios";
+import apiConfig from "../../api/apiConfig";
 
 const downloadCV = () => {
   const element = document.getElementById("cv-container");  // ID của phần tử chứa CV
@@ -74,7 +76,11 @@ const AccountSetup = () => {
   const [step, setStep] = useState(0);
 
   const [formValueEmployer, setFormValueEmployer] = useState({
-    description: "", website: "", country: "", industry: "",
+    description: "",
+    website: "",
+    country: "",
+    industry: "",
+    addresses: [],
   });
 
   const [formValueApplicant, setFormValueApplicant] = useState({
@@ -117,6 +123,10 @@ const AccountSetup = () => {
         {...formValueEmployer, [event.target.name]: event.target.value});
   };
 
+  const handleAddressesChange = (addresses) => {
+    console.log(formValueEmployer)
+    setFormValueEmployer((prev) => ({...prev, addresses})); // Correct usage
+  };
   const handleDescriptionEmployerChange = (data) => {
     setFormValueEmployer({...formValueEmployer, description: data});
   };
@@ -138,16 +148,108 @@ const AccountSetup = () => {
   };
 
   const handleSubmit = async () => {
+    const token = localStorage.getItem("accessToken");
+    // Chuyển inlineResult (giả sử nó là một Blob URL) thành byte array
+    const byteArray = await convertBlobToByteArray(inlineResult);
+    // case employer
     if (tabValue === 0) {
       try {
         showLoading();
+
+        console.log(byteArray)
+        console.log(Array.from(byteArray))
+        const response = await axios.post(apiConfig.createEmployer, {
+          img: Array.from(byteArray),  // Dữ liệu hình ảnh đã chuyển đổi
+          description: formValueEmployer.description,
+          address: formValueEmployer.addresses,
+          website: formValueEmployer.website,
+          country: formValueEmployer.country,
+          industry: formValueEmployer.industry,
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        console.log(response.data);
       } catch (error) {
         throwError(error);
       } finally {
-        // hideLoading();
+        hideLoading();
+      }
+    }
+
+    // case applicant
+    if (tabValue === 1) {
+      try {
+        showLoading();
+
+        // Format dữ liệu cho applicant
+        const formattedData = {
+          firstname: formValueApplicant.firstname,
+          lastname: formValueApplicant.lastname,
+          dob: formValueApplicant.dob,
+          gender: formValueApplicant.gender,
+          position: formValueApplicant.position,
+          userEmail: formValueApplicant.emailUser,
+          objective: formValueApplicant.objective,
+          address: formValueApplicant.address ? [formValueApplicant.address]
+              : [],
+          educationRequestDTO: formValueApplicant.education.map((edu) => ({
+            institutionName: edu.institutionName,
+            fieldOfStudy: edu.fieldOfStudy,
+            degree: edu.degree,
+            startDate: edu.startDate,
+            endDate: edu.endDate,
+          })),
+          projectRequestDTO: formValueApplicant.project.map((project) => ({
+            projectName: project.projectName,
+            description: project.description,
+            position: project.position,
+            startDate: project.startDate,
+            endDate: project.endDate,
+          })),
+          workExperienceRequestDTO: formValueApplicant.workExperience.map(
+              (exp) => ({
+                companyName: exp.companyName,
+                position: exp.position,
+                startDate: exp.startDate,
+                endDate: exp.endDate,
+                description: exp.description,
+              })),
+          skills: formValueApplicant.skills,
+        };
+        console.log(formValueApplicant.emailUser)
+        const response = await axios.post(apiConfig.createApplicant,
+            formattedData
+            , {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            });
+        console.log(response.data);
+      } catch (error) {
+        throwError(error);
+      } finally {
+        hideLoading();
       }
     }
   };
+
+// Hàm chuyển Blob URL thành mảng byte (Uint8Array)
+  async function convertBlobToByteArray(blobUrl) {
+    const blob = await fetch(blobUrl).then((response) => response.blob());
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        const arrayBuffer = reader.result;
+        const byteArray = new Uint8Array(arrayBuffer);
+        resolve(byteArray);
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(blob);
+    });
+  }
 
   const renderFormFields = () => {
     if (tabValue === 0) {
@@ -155,6 +257,7 @@ const AccountSetup = () => {
           formValue={formValueEmployer}
           onChange={handleInputEmployerChange}
           onDescriptionChange={handleDescriptionEmployerChange}
+          onAddressesChange={handleAddressesChange}
       />);
     }
 
