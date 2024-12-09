@@ -15,7 +15,6 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MessageIcon from '@mui/icons-material/Message';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
-import logo from "../../assets/img/logo-test.jpg";
 import GroupIcon from '@mui/icons-material/Group';
 import WorkIcon from '@mui/icons-material/Work';
 import {useLocation} from 'react-router-dom';
@@ -52,6 +51,11 @@ const styles = {
 };
 
 const Navbar = () => {
+  const username = localStorage.getItem("username");
+  const email = localStorage.getItem("email");
+  const img = localStorage.getItem("img");
+  const userId = localStorage.getItem("userId");
+
   // get the current link
   const location = useLocation();
   const showAddressSearch = location.pathname === '/jobs/collections';
@@ -152,7 +156,7 @@ const Navbar = () => {
             width: '25%'
           }}>
             <IconButton color="inherit" onClick={handleMenuClick}>
-              <Avatar alt="Vu Luu" src={logo}/>
+              <Avatar alt="User Image" src={img}/>
             </IconButton>
 
             <Menu
@@ -173,15 +177,16 @@ const Navbar = () => {
                 gap: '10px',
                 p: '10px 20px'
               }}>
-                <Avatar alt="Vu Luu" src={logo}/>
+                <Avatar alt="Vu Luu" src={img}/>
+
                 <Box>
                   <Typography
                       variant="subtitle1"
-                      sx={{wordBreak: 'break-word'}}>Vũ Lưu</Typography>
+                      sx={{wordBreak: 'break-word'}}>{username}</Typography>
                   <Typography
                       variant="body2"
                       sx={{wordBreak: 'break-word'}}
-                      color="textSecondary">vuluu@example.com</Typography>
+                      color="textSecondary">{email}</Typography>
                 </Box>
               </Box>
               <MenuItem onClick={handleMenuClick}

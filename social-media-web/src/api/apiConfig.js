@@ -10,13 +10,13 @@ const apiConfig = {
 
   // user service
   // Applicant
-  createApplicant:`${API_BASE_URL}/api/user-service/applicant/create`,
+  createApplicant: `${API_BASE_URL}/api/user-service/applicant/create`,
 
   // employer
-  createEmployer:`${API_BASE_URL}/api/user-service/employer/create`,
+  createEmployer: `${API_BASE_URL}/api/user-service/employer/create`,
 
   // aggregation service
-  userBasicInfo: `${API_BASE_URL}/api/aggregation-service/query/user-basic-info`,
+  userBasicInfo: `${API_BASE_URL}/api/aggregation-service/query/user-basic-info?postId=""`,
 };
 
 export default apiConfig;

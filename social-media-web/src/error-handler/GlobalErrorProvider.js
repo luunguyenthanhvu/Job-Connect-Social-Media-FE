@@ -23,6 +23,10 @@ export const GlobalErrorProvider = ({children}) => {
       setTimeout(() => {
         navigate('/login');
       }, 2000);
+    } else if (errorCode === 1015) {
+      setTimeout(() => {
+        navigate('/account-setup');
+      }, 2000);
     }
 
     console.error('Global Error Caught:', error);

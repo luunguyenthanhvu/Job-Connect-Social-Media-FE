@@ -26,6 +26,8 @@ import {useNavigate} from "react-router-dom";
 import {useGlobalError} from "../../error-handler/GlobalErrorProvider";
 import axios from "axios";
 import apiConfig from "../../api/apiConfig";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 
 const downloadCV = () => {
   const element = document.getElementById("cv-container");  // ID của phần tử chứa CV
@@ -46,6 +48,25 @@ const downloadCV = () => {
 }
 
 const AccountSetup = () => {
+  // snack bar
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  // Hàm mở Snackbar
+  const showSnackbar = (message, severity = "success") => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setOpenSnackbar(true);
+  };
+
+  // Hàm đóng Snackbar
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
   // Loading axios here
   const {showLoading, hideLoading} = useLoading();
 
@@ -63,6 +84,14 @@ const AccountSetup = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      const maxFileSize = 1 * 1024 * 1024;
+
+      if (file.size > maxFileSize) {
+        showSnackbar("File size exceeds 1MB. Please upload a smaller image.!",
+            "error");
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageSrc(reader.result);
@@ -149,8 +178,12 @@ const AccountSetup = () => {
 
   const handleSubmit = async () => {
     const token = localStorage.getItem("accessToken");
+    console.log(token)
+    //const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnaWFvc3VraXJpdG9vQGdtYWlsLmNvbSIsInNjb3BlIjoiUk9MRV9VU0VSIiwiaXNzIjoidnVsdXUiLCJleHAiOjE3MzYyNjg2MjAsImlhdCI6MTczMzY3NjYyMCwidXNlcklkIjoiNTc5MWZjZmYtM2E4MS00YWRhLTk4YzEtNGM5Yjk5ZWJiZjZjIiwianRpIjoiMGNiZDFhYWUtY2FmOC00M2Y0LTllYjctY2MwYzUxMjk0ZWVhIn0.NjiQ_SXLAqCYSbOGgBFlK_3gCRSovLxDkma2FfCMv5PMn0wiMdpOArWyxdOs-5VCA11WxasvgElGWdgoiHV_SQ"
     // Chuyển inlineResult (giả sử nó là một Blob URL) thành byte array
     const byteArray = await convertBlobToByteArray(inlineResult);
+    console.log("Đây là byte array")
+    console.log(byteArray)
     // case employer
     if (tabValue === 0) {
       try {
@@ -171,6 +204,10 @@ const AccountSetup = () => {
           }
         });
         console.log(response.data);
+        showSnackbar("Your accout setup success!", "success");
+        setTimeout(() => {
+          navigate('/home');
+        }, 2000)
       } catch (error) {
         throwError(error);
       } finally {
@@ -185,6 +222,7 @@ const AccountSetup = () => {
 
         // Format dữ liệu cho applicant
         const formattedData = {
+          img: Array.from(byteArray),
           firstname: formValueApplicant.firstname,
           lastname: formValueApplicant.lastname,
           dob: formValueApplicant.dob,
@@ -227,6 +265,10 @@ const AccountSetup = () => {
               }
             });
         console.log(response.data);
+        showSnackbar("Your accout setup success!", "success");
+        setTimeout(() => {
+          navigate('/home');
+        }, 2000)
       } catch (error) {
         throwError(error);
       } finally {
@@ -339,74 +381,86 @@ const AccountSetup = () => {
   }
 
   return (<Box sx={{
-    maxWidth: "100%",
-    backgroundColor: "#fff",
-    margin: "auto",
-    padding: "30px 200px",
-    mt: 4
-  }}>
-    <Typography
-        sx={{
-          display: "flex", justifyContent: "center", alignItems: "center"
-        }}
-        variant="h4"
-        align="center"
-        gutterBottom
-    >
-      <AppLogo width={60} height={60}/>
-      Create Your Account
-    </Typography>
+        maxWidth: "100%",
+        backgroundColor: "#fff",
+        margin: "auto",
+        padding: "30px 200px",
+        mt: 4
+      }}>
+        <Typography
+            sx={{
+              display: "flex", justifyContent: "center", alignItems: "center"
+            }}
+            variant="h4"
+            align="center"
+            gutterBottom
+        >
+          <AppLogo width={60} height={60}/>
+          Create Your Account
+        </Typography>
 
-    <Tabs value={tabValue} onChange={handleTabChange} centered>
-      <Tab label="Employer"/>
-      <Tab label="Applicant"/>
-    </Tabs>
+        <Tabs value={tabValue} onChange={handleTabChange} centered>
+          <Tab label="Employer"/>
+          <Tab label="Applicant"/>
+        </Tabs>
 
-    <Stepper activeStep={step} sx={{my: 3}}>
-      {steps.map((label, index) => (<Step key={index}>
-        <StepLabel>{label}</StepLabel>
-      </Step>))}
-    </Stepper>
+        <Stepper activeStep={step} sx={{my: 3}}>
+          {steps.map((label, index) => (<Step key={index}>
+            <StepLabel>{label}</StepLabel>
+          </Step>))}
+        </Stepper>
 
-    <TransitionGroup>
-      <CSSTransition key={step} nodeRef={nodeRef} timeout={500}
-                     classNames="fade">
-        <div ref={nodeRef}>
-          <Box>
-            {step === 0 && (<Box textAlign="center">
-              <Typography variant="h6">Step 1: Choose Account
-                Type</Typography>
-              <Typography variant="body1" sx={{mt: 2}}>
-                Selected: {tabValue === 0 ? "Employer" : "Applicant"}
-              </Typography>
-            </Box>)}
-            {step === 1 && <Box>{renderFormFields()}</Box>}
-            {step === 2 && (<ImageEditor
-                imageSrc={imageSrc}
-                handleImageChange={handleImageChange}
-                setInlineResult={setInlineResult}
-                inlineResult={inlineResult}
-            />)}
-            {step === 3 && (renderReviewFields())}
-          </Box>
-        </div>
-      </CSSTransition>
-    </TransitionGroup>
+        <TransitionGroup>
+          <CSSTransition key={step} nodeRef={nodeRef} timeout={500}
+                         classNames="fade">
+            <div ref={nodeRef}>
+              <Box>
+                {step === 0 && (<Box textAlign="center">
+                  <Typography variant="h6">Step 1: Choose Account
+                    Type</Typography>
+                  <Typography variant="body1" sx={{mt: 2}}>
+                    Selected: {tabValue === 0 ? "Employer" : "Applicant"}
+                  </Typography>
+                </Box>)}
+                {step === 1 && <Box>{renderFormFields()}</Box>}
+                {step === 2 && (<ImageEditor
+                    imageSrc={imageSrc}
+                    handleImageChange={handleImageChange}
+                    setInlineResult={setInlineResult}
+                    inlineResult={inlineResult}
+                />)}
+                {step === 3 && (renderReviewFields())}
+              </Box>
+            </div>
+          </CSSTransition>
+        </TransitionGroup>
 
-    <Box sx={{mt: 3, display: "flex", justifyContent: "space-between"}}>
-      <Button variant="outlined" disabled={step === 0}
-              onClick={handlePreviousStep}>
-        Back
-      </Button>
-      {step === steps.length - 1 ? (
-          <Button variant="contained" onClick={handleSubmit}>
-            Submit
-          </Button>) : (
-          <Button variant="contained" onClick={handleNextStep}>
-            Next
-          </Button>)}
-    </Box>
-  </Box>)
+        <Box sx={{mt: 3, display: "flex", justifyContent: "space-between"}}>
+          <Button variant="outlined" disabled={step === 0}
+                  onClick={handlePreviousStep}>
+            Back
+          </Button>
+          {step === steps.length - 1 ? (
+              <Button variant="contained" onClick={handleSubmit}>
+                Submit
+              </Button>) : (
+              <Button variant="contained" onClick={handleNextStep}>
+                Next
+              </Button>)}
+        </Box>
+        {/* Snackbar với Alert */}
+        <Snackbar
+            open={openSnackbar}
+            autoHideDuration={4000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{vertical: "bottom", horizontal: "right"}}
+        >
+          <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Box>
+  )
       ;
 };
 
