@@ -27,7 +27,7 @@ const MainContent = () => {
           + "Learn more about Gustavo's journey in our latest KMS Spotlight episode 🌎 🛫 \n"
           + "\n"
           + "hashtag#KMSSpotlight hashtag#KMSTechnology",
-      image: "https://media.licdn.com/dms/image/v2/D5622AQF-F4NqCNaQuA/feedshare-shrink_1280/feedshare-shrink_1280/0/1730717468041?e=1733961600&v=beta&t=v4P8L301440oPwa3v2OcODwiAqCml1Z7i1LiDFqk9BA",
+      image: "https://media.licdn.com/dms/image/v2/D5622AQFEiE7OSYYR9Q/feedshare-shrink_1280/feedshare-shrink_1280/0/1734017798072?e=1737590400&v=beta&t=haAgWpm1xXhKiDwDSZYnckCRpDe2oeD-4Pf0bSbBWlw",
       likes: 20,
       comments: 5,
     },
@@ -45,7 +45,7 @@ const MainContent = () => {
           + "👉🏻 Tune in for more updates and be part of the conversation: https://lnkd.in/gxiC8qth\n"
           + "👉🏻 Learn more: https://lnkd.in/dXM7iRNZ\n"
           + "hashtag#FPTTechday hashtag#FPTTechday2024 hashtag#FPT hashtag#FPTSoftware",
-      image: "https://media.licdn.com/dms/image/v2/D5622AQEtLi8OkhMPiw/feedshare-shrink_1280/feedshare-shrink_1280/0/1730781181861?e=1733961600&v=beta&t=ScGD3flzXwGwz-cXJr0BaVBUzVrfr9dgmqfXYRVJ5Z8",
+      image: "https://media.licdn.com/dms/image/v2/D5622AQFCZK5BbgPynw/feedshare-shrink_2048_1536/B56ZPQHXHOHoAo-/0/1734363417525?e=1737590400&v=beta&t=Hejja-C168sg_lHCzrTWA-fdTU6oQX-vqznxVUG_4s4",
       likes: 15,
       comments: 3,
     },

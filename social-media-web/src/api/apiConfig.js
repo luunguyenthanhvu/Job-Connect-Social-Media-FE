@@ -16,7 +16,8 @@ const apiConfig = {
   createEmployer: `${API_BASE_URL}/api/user-service/employer/create`,
 
   // aggregation service
-  userBasicInfo: `${API_BASE_URL}/api/aggregation-service/query/user-basic-info?postId=""`,
+  userBasicInfo: `${API_BASE_URL}/api/aggregation-service/query/user-basic-info?postId={postId}`,
+  listJobPost: `${API_BASE_URL}/api/aggregation-service/query/job-list?page={page}&size={size}`,
 };
 
 export default apiConfig;
