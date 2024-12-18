@@ -1,21 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Card from "@mui/material/Card";
 import {Box, List, Pagination, Typography} from "@mui/material";
-import JobItem from './JobItem';
+import JobItem from "./JobItem";
 
-const MainContent = ({onJobClick, posts}) => {
+const MainContent = ({onJobClick, jobs, page, setPage}) => {
 
-  const jobsPerPage = 5; // Define the number of jobs per page
-  const [page, setPage] = useState(1);
-
+  // Cập nhật trang khi người dùng chọn trang mới
   const handlePageChange = (event, value) => {
-    setPage(value);
+    setPage(value - 1); // Pagination sử dụng 1-based index, backend sử dụng 0-based index
   };
-
-  const displayedJobs = posts.slice(
-      (page - 1) * jobsPerPage,
-      page * jobsPerPage
-  );
 
   return (
       <Box>
@@ -45,21 +38,24 @@ const MainContent = ({onJobClick, posts}) => {
           </Box>
 
           <List sx={{width: '100%', bgcolor: 'background.paper'}}>
-            {displayedJobs.map((job) => (
-                <JobItem
-                    key={job.id}
-                    job={job}
-                    onClick={() => onJobClick(job)}
-                />
-            ))}
+            {jobs.map((job) => {
+              return (
+                  <JobItem
+                      key={job.id}
+                      job={job}
+                      onClick={() => onJobClick(job)}
+                  />
+              );
+            })}
           </List>
 
           {/* Pagination */}
           <Box sx={{display: 'flex', justifyContent: 'center', padding: 2}}>
             <Pagination
-                count={Math.ceil(posts.length / jobsPerPage)}
-                page={page}
+                count={jobs.totalPages}
+                page={page + 1}
                 onChange={handlePageChange}
+                color="primary"
             />
           </Box>
         </Card>

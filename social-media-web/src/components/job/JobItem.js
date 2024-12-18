@@ -1,4 +1,3 @@
-// JobItem.js
 import React from 'react';
 import {
   Avatar,
@@ -12,8 +11,8 @@ import {
 } from "@mui/material";
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 
-const JobItem = ({job, isSaved, onToggleSave}) => (
-    <>
+const JobItem = ({job, isSaved, onClick}) => (
+    <div>
       <ListItem
           alignItems="flex-start"
           sx={{
@@ -21,42 +20,47 @@ const JobItem = ({job, isSaved, onToggleSave}) => (
             marginBottom: '10px'
           }}
           secondaryAction={
-            <IconButton onClick={() => onToggleSave(job.id)} edge="end">
+            <IconButton edge="end">
               <BookmarksIcon sx={{color: isSaved ? '#0077B5' : 'grey'}}/>
             </IconButton>
           }
       >
         <ListItemAvatar>
-          <Avatar alt={job.companyName} src={job.avt}/>
+          <Avatar alt={job.username} src={job.avatarUrl}/>
         </ListItemAvatar>
         <ListItemText
             primary={
-              <Link variant="subtitle1"
-                    sx={{
-                      fontWeight: 'bold',
-                      color: '#0077B5',
-                      cursor: 'pointer',
-                      textDecoration: 'none',
-                      '&:hover': {
-                        textDecoration: 'underline',
-                        textDecorationColor: '#0077B5',
-                      }
-                    }}>
-                {job.jobTitle}
+              <Link
+                  variant="subtitle1"
+                  sx={{
+                    fontWeight: 'bold',
+                    color: '#0077B5',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    '&:hover': {
+                      textDecoration: 'underline',
+                      textDecorationColor: '#0077B5',
+                    }
+                  }}
+                  onClick={onClick}
+              >
+                {job.title}
               </Link>
             }
             secondary={
-              <>
+              <div>
+                {/* Adjusting Typography components to prevent invalid nesting */}
                 <Typography
                     variant="body2"
                     sx={{
                       color: 'text.primary',
-                      fontWeight: 500,
+                      fontWeight: 700,
                       display: 'block',
                       marginBottom: '4px'
                     }}
+                    component="span" // Change component to span instead of p
                 >
-                  {job.companyName}
+                  {job.username}
                 </Typography>
                 <Typography
                     variant="body2"
@@ -65,6 +69,7 @@ const JobItem = ({job, isSaved, onToggleSave}) => (
                       display: 'block',
                       marginBottom: '4px'
                     }}
+                    component="span" // Change component to span instead of p
                 >
                   {job.address}
                 </Typography>
@@ -75,16 +80,16 @@ const JobItem = ({job, isSaved, onToggleSave}) => (
                       display: 'block',
                       fontStyle: 'italic',
                     }}
+                    component="span" // Change component to span instead of p
                 >
-                  {job.timePost} ({job.type})
+                  Posting date: {job.postedDate}
                 </Typography>
-              </>
+              </div>
             }
-
         />
       </ListItem>
       <Divider variant="inset" component="li"/>
-    </>
+    </div>
 );
 
 export default JobItem;
