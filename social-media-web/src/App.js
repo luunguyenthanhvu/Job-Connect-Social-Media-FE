@@ -14,6 +14,7 @@ import {
   Friend,
   Home,
   JobPage,
+  JobPosting,
   Login,
   Message,
   Notification,
@@ -79,7 +80,12 @@ const PageRoutes = () => {
                   hasNavbar={!noNavbarPaths.includes(
                       location.pathname)}><JobPage/></PageTransition>}
           />
-
+          <Route
+              path="/post-job"
+              element={<PageTransition
+                  hasNavbar={!noNavbarPaths.includes(
+                      location.pathname)}><JobPosting/></PageTransition>}
+          />
           <Route
               path="/messages"
               element={<PageTransition

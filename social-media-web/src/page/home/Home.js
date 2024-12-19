@@ -8,6 +8,7 @@ import {useLoading} from "../../context/LoadingContext";
 import {useGlobalError} from "../../error-handler/GlobalErrorProvider";
 import axios from "axios";
 import apiConfig from "../../api/apiConfig";
+import WebSocketComponent from "../../hooks/ws-client/WebSocketComponent";
 
 const Home = () => {
   // Loading axios here
@@ -16,27 +17,26 @@ const Home = () => {
   const token = localStorage.getItem("accessToken");
   const email = localStorage.getItem("email");
   const fetchApiData = async () => {
-    if (email === "") {
-      try {
-        showLoading();
-        const response = await axios.get(`${apiConfig.userBasicInfo}`
-            , {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-            });
+    try {
+      showLoading();
+      const response = await axios.get(`${apiConfig.userBasicInfo}`
+          , {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
 
-        const userData = response.data.result;
-        localStorage.setItem("username", userData.username);
-        localStorage.setItem("email", userData.email);
-        localStorage.setItem("img", userData.img);
-        localStorage.setItem("userId", userData.id);
-        localStorage.setItem("userRole", userData.roles[0].roleName);
-      } catch (error) {
-        throwError(error);
-      } finally {
-        hideLoading();
-      }
+      const userData = response.data.result;
+      localStorage.setItem("username", userData.username);
+      localStorage.setItem("email", userData.email);
+      localStorage.setItem("avtUrl", userData.img);
+      console.log(userData)
+      localStorage.setItem("userId", userData.id);
+      localStorage.setItem("userRole", userData.roles[0].roleName);
+    } catch (error) {
+      throwError(error);
+    } finally {
+      hideLoading();
     }
 
   };
@@ -62,6 +62,7 @@ const Home = () => {
         }}>
           <Footer/>
         </Box>
+        <WebSocketComponent/>
       </div>
   );
 };

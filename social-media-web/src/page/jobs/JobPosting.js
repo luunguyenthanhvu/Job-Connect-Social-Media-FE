@@ -1,122 +1,261 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   FormControl,
+  Grid,
   InputLabel,
   MenuItem,
   Select,
-  TextField
+  TextField,
 } from '@mui/material';
+import {CKEditor} from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import axios from 'axios';
+import apiConfig from "../../api/apiConfig";
+import {useLoading} from "../../context/LoadingContext";
+import {useGlobalError} from "../../error-handler/GlobalErrorProvider";
+import {useNavigate} from "react-router-dom";
 
-const JobPosting = ({onClose}) => {
+const JobPosting = () => {
   const [jobTitle, setJobTitle] = useState('');
+  const [jobDescription, setJobDescription] = useState('');
+  const [jobExpertise, setJobExpertise] = useState('');
+  const [jobWelfare, setJobWelfare] = useState('');
   const [location, setLocation] = useState('');
   const [jobType, setJobType] = useState('');
-  const [jobDescription, setJobDescription] = useState('');
-  const [skills, setSkills] = useState('');
-  const [benefits, setBenefits] = useState('');
+  const [numberOfPositions, setNumberOfPositions] = useState(1);
+  const [expirationDate, setExpirationDate] = useState('');
+  const [employmentTypes, setEmploymentTypes] = useState([]);
+  const {showLoading, hideLoading} = useLoading();
+  const {throwError} = useGlobalError();
+  const navigate = useNavigate();
+  const [listAddress, setListAddress] = useState(null);
 
-  const handlePostJob = () => {
-    // Gửi dữ liệu tuyển dụng
+  // Alert info for user
+  const [openAlert, setOpenAlert] = React.useState(false);
+  const [alertMessage, setAlertMessage] = React.useState('');
+
+  // user role
+  const userRole = localStorage.getItem("userRole");
+  const handlePostJob = async () => {
+    showLoading();
     const jobData = {
-      jobTitle,
-      location,
-      jobType,
-      jobDescription,
-      skills,
-      benefits,
+      title: jobTitle,
+      jobDescription: jobDescription,
+      jobExpertise: jobExpertise,
+      jobWelfare: jobWelfare,
+      addressId: location,
+      employmentType: jobType,
+      numberOfPositions: numberOfPositions,
+      expirationDate: new Date(expirationDate),
     };
-    console.log('Job posted:', jobData);
-    onClose(); // Đóng modal sau khi đăng
+    console.log(jobData)
+    try {
+      const response = await axios.post(
+          `${apiConfig.createJob}`,
+          jobData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+      );
+      if (response.status === 200) {
+        setAlertMessage('Create a new jobs successfully! Redirecting...');
+        setOpenAlert(true);
+
+        // Redirect after 2 seconds
+        setTimeout(() => {
+          navigate('/jobs');
+        }, 2000);
+      }
+
+    } catch (error) {
+      console.error('Error posting job:', error);
+    } finally {
+      hideLoading();
+    }
   };
 
+  const loadUserListAddress = async () => {
+    showLoading();
+    try {
+      const response = await axios.get(
+          `${apiConfig.getUserListAddress}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+      if (response.status === 200) {
+        setListAddress(response.data.result);
+      }
+    } catch (error) {
+      throwError(error);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const loadEmploymentTypes = async () => {
+    try {
+      // Simulating fetching enum values from the backend
+      const response = [
+        {value: 'FULL_TIME', label: 'Full-time'},
+        {value: 'PART_TIME', label: 'Part-time'},
+        {value: 'INTERNSHIP', label: 'Internship'}
+      ];
+      setEmploymentTypes(response);
+    } catch (error) {
+      throwError(error);
+    }
+  };
+
+  useEffect(() => {
+    loadUserListAddress();
+    loadEmploymentTypes(); // Load the employment types
+  }, []);
+
   return (
-      <Dialog open={true} onClose={onClose}>
-        <DialogTitle>Đăng Tuyển Dụng</DialogTitle>
-        <DialogContent
-            dividers
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
-              maxHeight: '80vh', // Giới hạn chiều cao pop-up
-              overflowY: 'auto', // Cho phép cuộn dọc
-              padding: 2,
-              width: '600px', // Đặt chiều rộng hợp lý cho modal
-            }}
-        >
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#f4f4f9',
+        padding: '20px',
+      }}>
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '8px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+          padding: '40px',
+          width: '100%',
+          maxWidth: '900px',
+        }}>
+          <h2 style={{
+            textAlign: 'center',
+            fontSize: '24px',
+            color: '#333',
+            marginBottom: '30px',
+          }}>Post Recruitment</h2>
+
           <TextField
-              label="Tên Công Việc"
+              label="Job name"
               value={jobTitle}
               onChange={(e) => setJobTitle(e.target.value)}
+              fullWidth
+              margin="normal"
           />
 
-          {/* Select địa điểm */}
-          <FormControl fullWidth>
-            <InputLabel>Địa Điểm</InputLabel>
-            <Select
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                label="Địa Điểm"
-            >
-              <MenuItem value="Ho Chi Minh City">Ho Chi Minh City</MenuItem>
-              <MenuItem value="Hanoi">Hanoi</MenuItem>
-              <MenuItem value="Da Nang">Da Nang</MenuItem>
-              <MenuItem value="Hai Phong">Hai Phong</MenuItem>
-            </Select>
-          </FormControl>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Address</InputLabel>
+                <Select
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    label="Address"
+                >
+                  {listAddress && listAddress.map(address => (
+                      <MenuItem key={address.addressId}
+                                value={address.addressId}>
+                        {address.addressDescription}
+                      </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-          {/* Select loại công việc */}
-          <FormControl fullWidth>
-            <InputLabel>Loại Công Việc</InputLabel>
-            <Select
-                value={jobType}
-                onChange={(e) => setJobType(e.target.value)}
-                label="Loại Công Việc"
-            >
-              <MenuItem value="Full Time">Full Time</MenuItem>
-              <MenuItem value="Part Time">Part Time</MenuItem>
-              <MenuItem value="Internship">Internship</MenuItem>
-            </Select>
-          </FormControl>
+            <Grid item xs={6}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Employment Type</InputLabel>
+                <Select
+                    value={jobType}
+                    onChange={(e) => setJobType(e.target.value)}
+                    label="Employment Type"
+                >
+                  {employmentTypes.map(type => (
+                      <MenuItem key={type.value} value={type.value}>
+                        {type.label}
+                      </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-          <TextField
-              label="Mô Tả Công Việc"
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
-              multiline
-              rows={4}
-          />
-          <TextField
-              label="Kỹ Năng Chuyên Môn"
-              value={skills}
-              onChange={(e) => setSkills(e.target.value)}
-              multiline
-              rows={3}
-          />
-          <TextField
-              label="Phúc Lợi Dành Cho Bạn"
-              value={benefits}
-              onChange={(e) => setBenefits(e.target.value)}
-              multiline
-              rows={3}
-          />
-        </DialogContent>
+            <Grid item xs={6}>
+              <TextField
+                  label="Number of Positions"
+                  type="number"
+                  value={numberOfPositions}
+                  onChange={(e) => setNumberOfPositions(e.target.value)}
+                  fullWidth
+                  margin="normal"
+              />
+            </Grid>
 
-        <DialogActions>
-          <Button onClick={onClose} color="secondary">
-            Hủy
-          </Button>
-          <Button onClick={handlePostJob} variant="contained" color="primary">
-            Đăng Tuyển
-          </Button>
-        </DialogActions>
-      </Dialog>
-  );
+            <Grid item xs={6}>
+              <TextField
+                  label="Expiration date"
+                  type="date"
+                  value={expirationDate}
+                  onChange={(e) => setExpirationDate(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+              />
+            </Grid>
+          </Grid>
+
+          <div style={{marginTop: '20px'}}>
+            <h3>Job description</h3>
+            <CKEditor
+                editor={ClassicEditor}
+                data={jobDescription}
+                onChange={(event, editor) => setJobDescription(
+                    editor.getData())}
+            />
+          </div>
+
+          <div style={{marginTop: '20px'}}>
+            <h3>Professional Skills</h3>
+            <CKEditor
+                editor={ClassicEditor}
+                data={jobExpertise}
+                onChange={(event, editor) => setJobExpertise(editor.getData())}
+            />
+          </div>
+
+          <div style={{marginTop: '20px'}}>
+            <h3>Welfare</h3>
+            <CKEditor
+                editor={ClassicEditor}
+                data={jobWelfare}
+                onChange={(event, editor) => setJobWelfare(editor.getData())}
+            />
+          </div>
+
+          {userRole === 'EMPLOYER' && (
+              <Button
+                  onClick={handlePostJob}
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  style={{
+                    marginTop: '30px',
+                    padding: '12px',
+                    fontSize: '16px',
+                  }}
+              >
+                Post a job
+              </Button>
+          )}
+        </div>
+      </div>
+  )
+      ;
 };
 
 export default JobPosting;

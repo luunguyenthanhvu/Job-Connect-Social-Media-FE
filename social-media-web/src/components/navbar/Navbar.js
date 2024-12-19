@@ -53,7 +53,8 @@ const styles = {
 const Navbar = () => {
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("email");
-  const img = localStorage.getItem("img");
+  const img = localStorage.getItem("avtUrl");
+  console.log(localStorage.getItem("avtUrl"))
   const userId = localStorage.getItem("userId");
 
   // get the current link
