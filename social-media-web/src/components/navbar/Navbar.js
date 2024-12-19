@@ -19,7 +19,6 @@ import GroupIcon from '@mui/icons-material/Group';
 import WorkIcon from '@mui/icons-material/Work';
 import {useLocation} from 'react-router-dom';
 import AppLogo from "../icons/AppLogo"
-
 const styles = {
   appBar: {
     backgroundColor: '#FFFFFF', // Màu nền trắng cho navbar

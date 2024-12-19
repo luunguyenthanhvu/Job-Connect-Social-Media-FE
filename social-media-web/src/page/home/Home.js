@@ -8,7 +8,7 @@ import {useLoading} from "../../context/LoadingContext";
 import {useGlobalError} from "../../error-handler/GlobalErrorProvider";
 import axios from "axios";
 import apiConfig from "../../api/apiConfig";
-import WebSocketComponent from "../../hooks/ws-client/WebSocketComponent";
+import useWebsocket from "../../hooks/ws-client/websocket";
 
 const Home = () => {
   // Loading axios here
@@ -16,6 +16,9 @@ const Home = () => {
   const {throwError} = useGlobalError();
   const token = localStorage.getItem("accessToken");
   const email = localStorage.getItem("email");
+
+  // websocket
+  const {notifications} = useWebsocket();
   const fetchApiData = async () => {
     try {
       showLoading();
@@ -34,6 +37,7 @@ const Home = () => {
       localStorage.setItem("userId", userData.id);
       localStorage.setItem("userRole", userData.roles[0].roleName);
     } catch (error) {
+      console.log(error)
       throwError(error);
     } finally {
       hideLoading();
@@ -62,7 +66,6 @@ const Home = () => {
         }}>
           <Footer/>
         </Box>
-        <WebSocketComponent/>
       </div>
   );
 };
