@@ -6,10 +6,10 @@ const useWebsocket = () => {
   const [notifications, setNotifications] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
   const [stompClient, setStompClient] = useState(null);
-  const [error, setError] = useState(null); // For error handling
+  const [error, setError] = useState(null);
 
   const token = localStorage.getItem("accessToken");
-  const userId = localStorage.getItem("userId"); // Lấy userId từ localStorage (hoặc từ nơi lưu trữ khác)
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     // Kiểm tra nếu không có userId, thì không tạo kết nối
@@ -18,54 +18,57 @@ const useWebsocket = () => {
       return;
     }
 
-    const socket = new SockJS(
-        `http://localhost:8087/websocket-service/ws`);
+    const socket = new SockJS(`http://localhost:8087/websocket-service/ws`);
     const client = Stomp.over(socket);
-    const header = {
-      "Authorization": `Bearer ${token}`,
-      "userId": userId
-    }
-    client.connect(
-        header,
-        (frame) => {
-          setIsConnected(true);
-          setStompClient(client);
+    setStompClient(client); // Set stompClient after it's initialized
 
-          // Subscribe to topic
-          client.subscribe("/topic/notifications", (message) => {
-            setNotifications((prevNotifications) => [
-              ...prevNotifications,
-              message.body,
-            ]);
-          });
-        },
-        (error) => {
-          console.error("WebSocket connection error:", error);
-          setError(error);
-          setIsConnected(false);
-        }
+  }, [userId, token]);
+
+  useEffect(() => {
+    // Make sure stompClient is not null and connected
+    if (stompClient && !isConnected) {
+      const connectHeaders = {
+        'userId': localStorage.getItem("userId")
+      };
+      stompClient.connect(
+          connectHeaders,
+          onConnected,
+          onError
+      );
+    }
+  }, [stompClient, isConnected]); // Run this effect after stompClient is set
+
+  const onConnected = () => {
+    // Set the connected state
+    setIsConnected(true);
+
+    // Subscribe to user-specific and public topics
+    stompClient.subscribe(`/user/${userId}/queue/notifications`,
+        onMessageReceived);
+    stompClient.subscribe('/user/public', onMessageReceived);
+
+    // Send the connected user info
+    stompClient.send(
+        '/app/user.addUser',
+        {},
+        JSON.stringify({userId: userId})
     );
-
-    // Cleanup on component unmount
-    return () => {
-      if (client && isConnected) {
-        client.disconnect(() => {
-          console.log("WebSocket disconnected");
-        });
-      }
-    };
-  }, [userId, token]); // Re-run when userId or token changes
-
-  const handleSendMessage = (message) => {
-    if (isConnected && stompClient) {
-      stompClient.send("/app/notifications", {},
-          JSON.stringify({message, userId}));
-    } else {
-      console.log("WebSocket not connected yet");
-    }
   };
 
-  return {notifications, handleSendMessage, isConnected, error};
+  const onMessageReceived = (message) => {
+    // Handle incoming messages here
+    setNotifications((prevNotifications) => [
+      ...prevNotifications,
+      message.body,
+    ]);
+  };
+
+  const onError = (error) => {
+    console.error("WebSocket error:", error);
+    setError(error);
+  };
+
+  return {notifications, isConnected, error};
 };
 
 export default useWebsocket;
