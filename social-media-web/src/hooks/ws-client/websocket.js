@@ -45,6 +45,8 @@ const useWebsocket = () => {
     // Subscribe to user-specific and public topics
     stompClient.subscribe(`/user/${userId}/queue/notifications`,
         onMessageReceived);
+    stompClient.subscribe(`/user/${userId}/queue/messages`,
+        onMessageReceived);
     stompClient.subscribe('/user/public', onMessageReceived);
 
     // Send the connected user info
