@@ -24,18 +24,21 @@ import {
 } from './index';
 import {GlobalErrorProvider} from "./error-handler/GlobalErrorProvider";
 import {LoadingProvider} from './context/LoadingContext';
+import {WebSocketProvider} from './hooks/ws-client/WebSocketContext';
 
 const noNavbarPaths = ['/', '/login', '/forgot-password', '/register',
   '/verify', '/account-setup'];
 const App = () => {
   return (
       <Router>
-        <GlobalErrorProvider>
-          <LoadingProvider>
-            <ConditionalNavbar/>
-            <PageRoutes/>
-          </LoadingProvider>
-        </GlobalErrorProvider>
+        <WebSocketProvider>
+          <GlobalErrorProvider>
+            <LoadingProvider>
+              <ConditionalNavbar/>
+              <PageRoutes/>
+            </LoadingProvider>
+          </GlobalErrorProvider>
+        </WebSocketProvider>
       </Router>
   );
 };

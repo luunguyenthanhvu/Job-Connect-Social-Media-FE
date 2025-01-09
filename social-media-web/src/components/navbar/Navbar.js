@@ -19,6 +19,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import WorkIcon from '@mui/icons-material/Work';
 import {useLocation} from 'react-router-dom';
 import AppLogo from "../icons/AppLogo"
+
 const styles = {
   appBar: {
     backgroundColor: '#FFFFFF', // Màu nền trắng cho navbar
@@ -55,6 +56,8 @@ const Navbar = () => {
   const img = localStorage.getItem("avtUrl");
   console.log(localStorage.getItem("avtUrl"))
   const userId = localStorage.getItem("userId");
+
+  const notifications = localStorage.getItem("notifications");
 
   // get the current link
   const location = useLocation();
@@ -129,7 +132,7 @@ const Navbar = () => {
                 '& .MuiBadge-badge': {
                   backgroundColor: '#ff5722', color: '#fff',
                 },
-              }} badgeContent={100} max={99}>
+              }} badgeContent={notifications} max={99}>
                 <NotificationsIcon/>
               </Badge>
             </IconButton>
@@ -140,7 +143,7 @@ const Navbar = () => {
                 '& .MuiBadge-badge': {
                   backgroundColor: '#2196f3', color: '#fff',
                 },
-              }} badgeContent={100} max={99}>
+              }} badgeContent={notifications} max={99}>
                 <MessageIcon/>
               </Badge>
             </IconButton>

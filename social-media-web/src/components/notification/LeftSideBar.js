@@ -33,10 +33,10 @@ const LeftSideBar = () => {
           <CardHeader
               avatar={
                 <IconButton color="inherit">
-                  <Avatar alt="Vu Luu" src={logo}/>
+                  <Avatar alt="Vu Luu" src={""}/>
                 </IconButton>
               }
-              title="Luu Nguyen Thanh Vu"
+              title="FPT SoftWare"
               subheader="08/11/2003"
           />
           <CardContent sx={{paddingTop: '0px'}}>

@@ -45,9 +45,9 @@ const useWebsocket = () => {
     // Subscribe to user-specific and public topics
     stompClient.subscribe(`/user/${userId}/queue/notifications`,
         onMessageReceived);
-    stompClient.subscribe(`/user/${userId}/queue/messages`,
-        onMessageReceived);
-    stompClient.subscribe('/user/public', onMessageReceived);
+    // stompClient.subscribe(`/user/${userId}/queue/messages`,
+    //     onMessageReceived);
+    // stompClient.subscribe('/user/public', onMessageReceived);
 
     // Send the connected user info
     stompClient.send(
@@ -58,11 +58,15 @@ const useWebsocket = () => {
   };
 
   const onMessageReceived = (message) => {
+    console.log(message)
+    let notifications = localStorage.getItem("notifications");
+    notifications += 1;
+    localStorage.setItem("notifications", notifications);
     // Handle incoming messages here
-    setNotifications((prevNotifications) => [
-      ...prevNotifications,
-      message.body,
-    ]);
+    // setNotifications((prevNotifications) => [
+    //   ...prevNotifications,
+    //   message.body,
+    // ]);
   };
 
   const onError = (error) => {

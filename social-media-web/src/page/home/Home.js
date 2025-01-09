@@ -8,7 +8,7 @@ import {useLoading} from "../../context/LoadingContext";
 import {useGlobalError} from "../../error-handler/GlobalErrorProvider";
 import axios from "axios";
 import apiConfig from "../../api/apiConfig";
-import useWebsocket from "../../hooks/ws-client/websocket";
+import {useWebSocketContext} from "../../hooks/ws-client/WebSocketContext";
 
 const Home = () => {
   // Loading axios here
@@ -18,7 +18,7 @@ const Home = () => {
   const email = localStorage.getItem("email");
 
   // websocket
-  const {notifications} = useWebsocket();
+  const {notifications, isConnected} = useWebSocketContext();
   const fetchApiData = async () => {
     try {
       showLoading();
@@ -34,6 +34,7 @@ const Home = () => {
       localStorage.setItem("email", userData.email);
       localStorage.setItem("avtUrl", userData.img);
       console.log(userData)
+      localStorage.setItem("notifications", userData.notifications);
       localStorage.setItem("userId", userData.id);
       localStorage.setItem("userRole", userData.roles[0].roleName);
     } catch (error) {
