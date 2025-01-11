@@ -11,7 +11,8 @@ import {useLoading} from '../../context/LoadingContext';
 const JobPage = () => {
   const [jobs, setJobs] = useState([]);
   const [page, setPage] = useState(0);
-  const [size, setSize] = useState(10);
+  const [totalPage, setTotalPage] = useState(0);
+  const [size, setSize] = useState(5);
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobDetail, setJobDetail] = useState(null);
   const {showLoading, hideLoading} = useLoading();
@@ -43,6 +44,7 @@ const JobPage = () => {
           {params: {page, size}});
       if (response.status === 200) {
         const resultValue = response.data.result;
+        setTotalPage(resultValue.totalPages);
         setJobs(resultValue.content);
       }
     } catch (error) {
@@ -84,6 +86,7 @@ const JobPage = () => {
               <MainContent
                   onJobClick={handleJobClick}
                   jobs={jobs}
+                  totalPage={totalPage}
                   page={page}
                   setPage={setPage}
               />

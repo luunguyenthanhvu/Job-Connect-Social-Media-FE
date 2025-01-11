@@ -3,7 +3,7 @@ import Card from "@mui/material/Card";
 import {Box, List, Pagination, Typography} from "@mui/material";
 import JobItem from "./JobItem";
 
-const MainContent = ({onJobClick, jobs, page, setPage}) => {
+const MainContent = ({onJobClick, jobs, page, totalPage, setPage}) => {
 
   // Cập nhật trang khi người dùng chọn trang mới
   const handlePageChange = (event, value) => {
@@ -52,7 +52,7 @@ const MainContent = ({onJobClick, jobs, page, setPage}) => {
           {/* Pagination */}
           <Box sx={{display: 'flex', justifyContent: 'center', padding: 2}}>
             <Pagination
-                count={jobs.totalPages}
+                count={totalPage}
                 page={page + 1}
                 onChange={handlePageChange}
                 color="primary"

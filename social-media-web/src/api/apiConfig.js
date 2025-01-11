@@ -23,6 +23,9 @@ const apiConfig = {
   getJobDetails: `${API_BASE_URL}/api/post-service/job/get/job-detail`,
   createJob: `${API_BASE_URL}/api/post-service/job/create`,
 
+  // job-details page
+  getJobDetailAggregation: `${API_BASE_URL}/api/aggregation-service/query/job-details`,
+
   // Notification page
   listNotification: `${API_BASE_URL}/api/aggregation-service/query/notifications-list`,
 };

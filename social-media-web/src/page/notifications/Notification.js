@@ -9,7 +9,7 @@ import axios from "axios";
 import apiConfig from "../../api/apiConfig";
 
 const Job = () => {
-
+  const [notifications, setNotifications] = React.useState([]);
   const {showLoading, hideLoading} = useLoading();
   const {throwError} = useGlobalError();
   const token = localStorage.getItem("accessToken");
@@ -23,7 +23,9 @@ const Job = () => {
             }
           });
 
+      // Format dữ liệu thông báo
       const userData = response.data.result;
+      setNotifications(userData);
       console.log(userData)
     } catch (error) {
       console.log(error)
@@ -44,7 +46,9 @@ const Job = () => {
       <LeftSideBar/>
     </Box>
     <Box sx={{width: '50%'}}>
-      <MainContent/>
+      <MainContent
+          notifications={notifications}
+      />
     </Box>
     <Box sx={{
       width: '25%',

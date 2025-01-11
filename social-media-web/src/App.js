@@ -13,6 +13,7 @@ import {
   EmployerProfile,
   Friend,
   Home,
+  JobDetails,
   JobPage,
   JobPosting,
   Login,
@@ -82,6 +83,12 @@ const PageRoutes = () => {
               element={<PageTransition
                   hasNavbar={!noNavbarPaths.includes(
                       location.pathname)}><JobPage/></PageTransition>}
+          />
+          <Route
+              path="/job-detail"
+              element={<PageTransition
+                  hasNavbar={!noNavbarPaths.includes(
+                      location.pathname)}><JobDetails/></PageTransition>}
           />
           <Route
               path="/post-job"
