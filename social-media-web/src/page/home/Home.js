@@ -18,7 +18,7 @@ const Home = () => {
   const email = localStorage.getItem("email");
 
   // websocket
-  const {notifications, isConnected} = useWebSocketContext();
+  const {notificationsCount, isConnected} = useWebSocketContext();
   const fetchApiData = async () => {
     try {
       showLoading();

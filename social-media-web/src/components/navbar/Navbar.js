@@ -143,7 +143,7 @@ const Navbar = () => {
                 '& .MuiBadge-badge': {
                   backgroundColor: '#2196f3', color: '#fff',
                 },
-              }} badgeContent={notifications} max={99}>
+              }} badgeContent={0} max={99}>
                 <MessageIcon/>
               </Badge>
             </IconButton>

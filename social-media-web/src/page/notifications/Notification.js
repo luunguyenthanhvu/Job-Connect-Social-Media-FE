@@ -7,12 +7,16 @@ import {useLoading} from "../../context/LoadingContext";
 import {useGlobalError} from "../../error-handler/GlobalErrorProvider";
 import axios from "axios";
 import apiConfig from "../../api/apiConfig";
+import {useWebSocketContext} from "../../hooks/ws-client/WebSocketContext";
 
 const Job = () => {
   const [notifications, setNotifications] = React.useState([]);
   const {showLoading, hideLoading} = useLoading();
   const {throwError} = useGlobalError();
   const token = localStorage.getItem("accessToken");
+
+  // websocket
+  const {notificationsCount, isConnected} = useWebSocketContext();
   const fetchApiData = async () => {
     try {
       showLoading();
@@ -40,6 +44,11 @@ const Job = () => {
     // Gọi API lần đầu tiên
     fetchApiData();
   }, []);
+
+  useEffect(() => {
+    // Gọi API lần đầu tiên
+    fetchApiData();
+  }, notificationsCount);
 
   return (<div style={{display: 'flex'}}>
     <Box sx={{width: '25%'}}>

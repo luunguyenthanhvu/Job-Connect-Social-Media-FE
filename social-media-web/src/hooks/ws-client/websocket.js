@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const useWebsocket = () => {
-  const [notifications, setNotifications] = useState([]);
+  const [notificationsCount, setNotificationsCount] = useState(0);
   const [isConnected, setIsConnected] = useState(false);
   const [stompClient, setStompClient] = useState(null);
   const [error, setError] = useState(null);
@@ -59,14 +61,14 @@ const useWebsocket = () => {
 
   const onMessageReceived = (message) => {
     console.log(message)
-    let notifications = localStorage.getItem("notifications");
-    notifications += 1;
-    localStorage.setItem("notifications", notifications);
-    // Handle incoming messages here
-    // setNotifications((prevNotifications) => [
-    //   ...prevNotifications,
-    //   message.body,
-    // ]);
+    let notificationsCount = localStorage.getItem("notifications");
+    notificationsCount += 1;
+    localStorage.setItem("notifications", notificationsCount);
+    setNotificationsCount(notificationsCount);
+    toast.info("You got new notification!", {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 5000, // tự động đóng sau 5 giây
+    });
   };
 
   const onError = (error) => {
@@ -74,7 +76,7 @@ const useWebsocket = () => {
     setError(error);
   };
 
-  return {notifications, isConnected, error};
+  return {notificationsCount, isConnected, error};
 };
 
 export default useWebsocket;
