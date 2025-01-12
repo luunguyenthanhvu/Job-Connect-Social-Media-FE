@@ -19,11 +19,13 @@ import apiConfig from "../../api/apiConfig";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS once in your app entry point
 
-const JobDetails = ({job, jobDetail}) => {
+const JobDetails = ({job, jobDetail,loadJobDetailsData }) => {
   console.log(job)
   const [isModalOpen, setIsModalOpen] = useState(false);  // State for modal visibility
   const [coverLetter, setCoverLetter] = useState('');     // State for cover letter input
   const userRole = localStorage.getItem('userRole');
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);  // Modal xác nhận
+  const [isApplied, setIsApplied] = useState(jobDetail?.applied || false);
   const {showLoading, hideLoading} = useLoading();
   const {throwError} = useGlobalError();
   const navigate = useNavigate();
@@ -46,6 +48,34 @@ const JobDetails = ({job, jobDetail}) => {
       if (response.status === 200) {
         console.log(response)
         toast.success("You have successfully applied to the job!", {
+          autoClose: 5000,
+          position: 'top-right'
+        });
+        loadJobDetailsData(job.id)
+      }
+    } catch (error) {
+      throwError(error);
+    }
+    handleCloseModal();
+  };
+
+  const handleCancelApply = async () => {
+    try {
+      const response = await axios.post(
+          `${apiConfig.applyToJob}`,
+          {
+            jobId: job.id,
+            coverLetter: coverLetter,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          });
+      if (response.status === 200) {
+        console.log(response);
+        loadJobDetailsData(job.id)
+        toast.success("You have successfully cancelled your application!", {
           autoClose: 5000,
           position: 'top-right'
         });
@@ -115,10 +145,15 @@ const JobDetails = ({job, jobDetail}) => {
         </Typography>
         <Divider sx={{marginY: 2}}/>
         {userRole !== 'EMPLOYER' && (
-            <Button variant="contained" color="primary" fullWidth
-                    onClick={handleOpenModal}>
-              Apply Now!
-            </Button>
+            jobDetail.applied ? (
+                <Button variant="contained" color="secondary" fullWidth onClick={handleCancelApply}>
+                  Cancel Apply
+                </Button>
+            ) : (
+                <Button variant="contained" color="primary" fullWidth onClick={handleOpenModal}>
+                  Apply Now!
+                </Button>
+            )
         )}
 
         {/* Cover Letter Modal */}

@@ -94,7 +94,11 @@ const JobPage = () => {
             {/* Job Detail */}
             <Grid item xs={12} md={8} sx={{overflowY: 'auto', height: '100%'}}>
               {selectedJob ? (
-                  <JobDetail job={selectedJob} jobDetail={jobDetail}/>
+                  <JobDetail
+                      job={selectedJob}
+                      jobDetail={jobDetail}
+                      loadJobDetailsData={loadJobDetailsData}
+                  />
               ) : (
                   <Box sx={{padding: 2}}>Select a job to see details</Box>
               )}

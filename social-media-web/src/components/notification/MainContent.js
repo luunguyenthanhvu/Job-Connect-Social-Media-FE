@@ -1,10 +1,23 @@
 import React from 'react';
-import {Box, Card, List} from "@mui/material";
+import {Box, Card, List, Typography} from "@mui/material";
 import NotificationItem from "./NotificationItem";
 
 const MainContent = ({notifications}) => {
   if (!Array.isArray(notifications)) {
-    return <div>Loading...</div>; // Hoặc hiển thị một thông báo nếu notifications không phải mảng
+    return (
+        <Box>
+          <Card sx={{
+            boxShadow: 3,
+            borderRadius: 2,
+            marginBottom: '10px',
+            padding: 2
+          }}>
+            <Typography variant="body1" color="textSecondary">
+              You have no notifications
+            </Typography>
+          </Card>
+        </Box>
+    );
   }
 
   return (

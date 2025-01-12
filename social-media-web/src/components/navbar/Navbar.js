@@ -19,6 +19,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import WorkIcon from '@mui/icons-material/Work';
 import {useLocation} from 'react-router-dom';
 import AppLogo from "../icons/AppLogo"
+import {useWebSocketContext} from "../../hooks/ws-client/WebSocketContext";
 
 const styles = {
   appBar: {
@@ -66,7 +67,9 @@ const Navbar = () => {
   const getIconColor = (path) => {
     return location.pathname.startsWith(path) ? '#0077B5' : 'inherit';
   };
-
+  // websocket
+  const {notificationsCount, isConnected} = useWebSocketContext();
+  console.log(notificationsCount)
   // state user menu profile
   const [userMenu, setUserMenu] = useState(null);
 

@@ -48,7 +48,7 @@ const Job = () => {
   useEffect(() => {
     // Gọi API lần đầu tiên
     fetchApiData();
-  }, notificationsCount);
+  }, [notificationsCount]);
 
   return (<div style={{display: 'flex'}}>
     <Box sx={{width: '25%'}}>

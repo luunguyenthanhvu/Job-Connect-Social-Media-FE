@@ -26,14 +26,14 @@ const NotificationItem = ({notification}) => {
           case 'SUGGEST_JOB':
             navigate(`/job-detail?id=${notification.postId}`); // Điều hướng tới trang job với query param id
             break;
-          case 'NEW_MESSAGE':
-            navigate(`/messages?id=${notification.id}`); // Điều hướng tới trang tin nhắn
+          case 'APPLY_JOB':
+            navigate(`/profile?id=${notification.fromId}`); // Điều hướng tới trang profile
             break;
           case 'SYSTEM_ALERT':
             navigate(`/alerts?id=${notification.id}`); // Điều hướng tới trang cảnh báo
             break;
           default:
-            navigate('/'); // Nếu không có type hợp lệ, điều hướng về trang chủ
+            navigate('/');
             break;
         }
       };
