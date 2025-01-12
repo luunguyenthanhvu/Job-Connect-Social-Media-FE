@@ -22,7 +22,7 @@ const apiConfig = {
   listJobPost: `${API_BASE_URL}/api/aggregation-service/query/job-list`,
   getJobDetails: `${API_BASE_URL}/api/post-service/job/get/job-detail`,
   createJob: `${API_BASE_URL}/api/post-service/job/create`,
-
+  applyToJob:  `${API_BASE_URL}/api/post-service/job/apply`,
   // job-details page
   getJobDetailAggregation: `${API_BASE_URL}/api/aggregation-service/query/job-details`,
 

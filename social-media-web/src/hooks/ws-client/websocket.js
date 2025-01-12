@@ -9,7 +9,16 @@ const useWebsocket = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [stompClient, setStompClient] = useState(null);
   const [error, setError] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
+  // Hàm mở Snackbar
+  const showSnackbar = (message, severity = "success") => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setOpenSnackbar(true);
+  };
   const token = localStorage.getItem("accessToken");
   const userId = localStorage.getItem("userId");
 
@@ -19,7 +28,6 @@ const useWebsocket = () => {
       setError("User ID not found");
       return;
     }
-
     const socket = new SockJS(`http://localhost:8087/websocket-service/ws`);
     const client = Stomp.over(socket);
     setStompClient(client); // Set stompClient after it's initialized
@@ -43,7 +51,6 @@ const useWebsocket = () => {
   const onConnected = () => {
     // Set the connected state
     setIsConnected(true);
-
     // Subscribe to user-specific and public topics
     stompClient.subscribe(`/user/${userId}/queue/notifications`,
         onMessageReceived);
@@ -57,6 +64,7 @@ const useWebsocket = () => {
         {},
         JSON.stringify({userId: userId})
     );
+
   };
 
   const onMessageReceived = (message) => {
@@ -65,11 +73,15 @@ const useWebsocket = () => {
     notificationsCount += 1;
     localStorage.setItem("notifications", notificationsCount);
     setNotificationsCount(notificationsCount);
-    toast.info("You got new notification!", {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 5000, // tự động đóng sau 5 giây
-    });
+    notifyNewInfo();
   };
+  const notifyNewInfo = () => {
+    console.log("ok ne")
+    toast.info("You got new notification!", {
+      autoClose: 5000,
+      position: 'top-right'
+    });
+  }
 
   const onError = (error) => {
     console.error("WebSocket error:", error);

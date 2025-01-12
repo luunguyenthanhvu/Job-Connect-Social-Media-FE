@@ -9,6 +9,7 @@ import {useGlobalError} from "../../error-handler/GlobalErrorProvider";
 import axios from "axios";
 import apiConfig from "../../api/apiConfig";
 import {useWebSocketContext} from "../../hooks/ws-client/WebSocketContext";
+import {toast} from "react-toastify";
 
 const Home = () => {
   // Loading axios here

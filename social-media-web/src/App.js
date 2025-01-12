@@ -26,6 +26,8 @@ import {
 import {GlobalErrorProvider} from "./error-handler/GlobalErrorProvider";
 import {LoadingProvider} from './context/LoadingContext';
 import {WebSocketProvider} from './hooks/ws-client/WebSocketContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const noNavbarPaths = ['/', '/login', '/forgot-password', '/register',
   '/verify', '/account-setup'];
@@ -37,6 +39,7 @@ const App = () => {
             <LoadingProvider>
               <ConditionalNavbar/>
               <PageRoutes/>
+              <ToastContainer />
             </LoadingProvider>
           </GlobalErrorProvider>
         </WebSocketProvider>
