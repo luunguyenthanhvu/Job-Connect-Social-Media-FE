@@ -69,7 +69,7 @@ const useWebsocket = () => {
 
   const onMessageReceived = (message) => {
     console.log(message)
-    let notificationsCount = localStorage.getItem("notifications");
+    let notificationsCount = parseInt(localStorage.getItem("notifications")) || 0;
     notificationsCount += 1;
     localStorage.setItem("notifications", notificationsCount);
     setNotificationsCount(notificationsCount);
