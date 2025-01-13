@@ -17,7 +17,8 @@ const apiConfig = {
   createEmployer: `${API_BASE_URL}/api/user-service/employer/create`,
 
   userBasicInfo: `${API_BASE_URL}/api/aggregation-service/query/user-basic-info?postId=""`,
-
+  applicantProfile: `${API_BASE_URL}/api/aggregation-service/query/applicant-details`,
+  employerProfile: `${API_BASE_URL}/api/aggregation-service/query/employer-details`,
   // job page
   listJobPost: `${API_BASE_URL}/api/aggregation-service/query/job-list`,
   getJobDetails: `${API_BASE_URL}/api/post-service/job/get/job-detail`,

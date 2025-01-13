@@ -17,7 +17,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import GroupIcon from '@mui/icons-material/Group';
 import WorkIcon from '@mui/icons-material/Work';
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import AppLogo from "../icons/AppLogo"
 import {useWebSocketContext} from "../../hooks/ws-client/WebSocketContext";
 
@@ -52,12 +52,13 @@ const styles = {
 };
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const username = localStorage.getItem("username");
   const email = localStorage.getItem("email");
   const img = localStorage.getItem("avtUrl");
   console.log(localStorage.getItem("avtUrl"))
   const userId = localStorage.getItem("userId");
-
+  const userRole = localStorage.getItem("userRole");
   const notifications = localStorage.getItem("notifications");
 
   // get the current link
@@ -76,6 +77,18 @@ const Navbar = () => {
   // handle function open menu
   const handleMenuClick = (event) => {
     setUserMenu(userMenu ? null : event.currentTarget);
+  };
+  const handleLogout = () => {
+    localStorage.clear(); // Xóa toàn bộ dữ liệu trong localStorage
+    navigate('/login');  // Điều hướng đến trang login hoặc trang chính
+  };
+
+  const handleFunction = () => {
+    if (userRole === 'USER') {
+      navigate(`/profile?id=${userId}`);
+    } else {
+      navigate(`/employer-profile?id=${userId}`);
+    }
   };
 
   return (
@@ -195,11 +208,11 @@ const Navbar = () => {
                       color="textSecondary">{email}</Typography>
                 </Box>
               </Box>
-              <MenuItem onClick={handleMenuClick}
+              <MenuItem onClick={handleFunction}
                         sx={styles.hoverMenuItem}>Profile</MenuItem>
               <MenuItem onClick={handleMenuClick}
                         sx={styles.hoverMenuItem}>Settings</MenuItem>
-              <MenuItem onClick={handleMenuClick}
+              <MenuItem onClick={handleLogout}
                         sx={styles.hoverMenuItem}>Logout</MenuItem>
 
             </Menu>

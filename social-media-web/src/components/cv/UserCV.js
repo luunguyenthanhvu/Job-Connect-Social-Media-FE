@@ -57,6 +57,14 @@ const UserCV = ({
   projects,
   workExperience
 }) => {
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
 
   return (
       <Card
@@ -194,7 +202,8 @@ const UserCV = ({
                     {edu.institutionName}
                   </Typography>
                   <Typography variant="body2" className="project-date">
-                    <i>{edu.startDate} - {edu.endDate}</i>
+                    <i>{formatDate(edu.startDate)} - {formatDate(
+                        edu.endDate)}</i>
                   </Typography>
                   <Typography variant="body2" className="project-position">
                     <span> Degree: </span> {edu.degree}
@@ -224,7 +233,7 @@ const UserCV = ({
                     {project.projectName}
                   </Typography>
                   <Typography variant="body2" className="project-date">
-                    <i>{project.startDate} - {project.endDate}</i>
+                    <i>{formatDate(project.startDate)} - {formatDate(project.endDate)}</i>
                   </Typography>
                   <Typography variant="body2" className="project-position">
                     <span>Position: </span> {project.position}
@@ -254,7 +263,7 @@ const UserCV = ({
                           {work.companyName}
                         </Typography>
                         <Typography variant="body2" className="project-date">
-                          <i>{work.startDate} - {work.endDate}</i>
+                          <i>{formatDate(work.startDate)} - {formatDate(work.endDate)}</i>
                         </Typography>
                         <Typography variant="body2"
                                     className="project-position">

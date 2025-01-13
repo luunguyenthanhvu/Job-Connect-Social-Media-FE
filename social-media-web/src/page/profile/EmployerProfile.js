@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Avatar,
   Box,
@@ -7,18 +7,25 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   IconButton,
   Paper,
-  Tab,
-  Tabs,
   TextField,
   Typography
 } from '@mui/material';
-import { Edit, Email, LocationOn, Phone } from '@mui/icons-material';
-import PostCard from '../../components/abstract-components/PostCard';
+import {Edit, Email, LocationOn, Phone} from '@mui/icons-material';
+import {useLoading} from "../../context/LoadingContext";
+import {useGlobalError} from "../../error-handler/GlobalErrorProvider";
+import {useLocation} from "react-router-dom";
+import axios from "axios";
+import apiConfig from "../../api/apiConfig";
 
 const EmployerProfile = () => {
+  const {showLoading, hideLoading} = useLoading();
+  const {throwError} = useGlobalError();
+  const token = localStorage.getItem("accessToken");
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('id');
   const [employer, setEmployer] = useState({
     name: 'Công ty ABC',
     address: '123 Đường ABC, Quận 1, TP. Hồ Chí Minh',
@@ -26,6 +33,29 @@ const EmployerProfile = () => {
     email: 'contact@companyabc.com',
     bio: 'Công ty chuyên về phát triển phần mềm...',
   });
+  const fetchApiData = async () => {
+    try {
+      showLoading();
+      const response = await axios.get(`${apiConfig.employerProfile}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = response.data.result;
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+      throwError(error);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  useEffect(() => {
+    fetchApiData();
+  }, []);
+
   const [tabValue, setTabValue] = useState(0);
 
   const handleTabChange = (event, newValue) => setTabValue(newValue);
@@ -35,17 +65,30 @@ const EmployerProfile = () => {
   const handleCloseEditDialog = () => setOpenEditDialog(false);
 
   return (
-      <Box sx={{ padding: 3, width: '80%', margin: 'auto', minHeight: '100vh' }}>
+      <Box sx={{padding: 3, width: '80%', margin: 'auto', minHeight: '100vh'}}>
         {/* Thông tin Nhà tuyển dụng */}
-        <Paper elevation={3} sx={{ padding: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 3, position: 'relative' }}>
-          <IconButton sx={{ position: 'absolute', top: 16, right: 16 }} onClick={handleEditClick}><Edit /></IconButton>
-          <Avatar sx={{ width: 120, height: 120, mb: 2 }} src="/company-logo.jpg" alt={employer.name} />
-          <Typography variant="h4" fontWeight="bold" sx={{ textAlign: 'center', mb: 1 }}>{employer.name}</Typography>
-          <Typography variant="body1" color="textSecondary">{employer.bio}</Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, my: 2 }}>
-            <Button startIcon={<LocationOn />}>{employer.address}</Button>
-            <Button startIcon={<Phone />}>{employer.phone}</Button>
-            <Button startIcon={<Email />}>{employer.email}</Button>
+        <Paper elevation={3} sx={{
+          padding: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          mb: 3,
+          position: 'relative'
+        }}>
+          <IconButton sx={{position: 'absolute', top: 16, right: 16}}
+                      onClick={handleEditClick}><Edit/></IconButton>
+          <Avatar sx={{width: 120, height: 120, mb: 2}} src="/company-logo.jpg"
+                  alt={employer.name}/>
+          <Typography variant="h4" fontWeight="bold" sx={{
+            textAlign: 'center',
+            mb: 1
+          }}>{employer.name}</Typography>
+          <Typography variant="body1"
+                      color="textSecondary">{employer.bio}</Typography>
+          <Box sx={{display: 'flex', justifyContent: 'center', gap: 2, my: 2}}>
+            <Button startIcon={<LocationOn/>}>{employer.address}</Button>
+            <Button startIcon={<Phone/>}>{employer.phone}</Button>
+            <Button startIcon={<Email/>}>{employer.email}</Button>
           </Box>
         </Paper>
 
@@ -79,11 +122,21 @@ const EmployerProfile = () => {
         <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
           <DialogTitle>Chỉnh sửa thông tin nhà tuyển dụng</DialogTitle>
           <DialogContent>
-            <TextField fullWidth label="Tên Công ty" value={employer.name} onChange={(e) => setEmployer({ ...employer, name: e.target.value })} />
-            <TextField fullWidth label="Địa chỉ" value={employer.address} onChange={(e) => setEmployer({ ...employer, address: e.target.value })} />
-            <TextField fullWidth label="Số điện thoại" value={employer.phone} onChange={(e) => setEmployer({ ...employer, phone: e.target.value })} />
-            <TextField fullWidth label="Email" value={employer.email} onChange={(e) => setEmployer({ ...employer, email: e.target.value })} />
-            <TextField fullWidth label="Giới thiệu công ty" value={employer.bio} onChange={(e) => setEmployer({ ...employer, bio: e.target.value })} />
+            <TextField fullWidth label="Tên Công ty" value={employer.name}
+                       onChange={(e) => setEmployer(
+                           {...employer, name: e.target.value})}/>
+            <TextField fullWidth label="Địa chỉ" value={employer.address}
+                       onChange={(e) => setEmployer(
+                           {...employer, address: e.target.value})}/>
+            <TextField fullWidth label="Số điện thoại" value={employer.phone}
+                       onChange={(e) => setEmployer(
+                           {...employer, phone: e.target.value})}/>
+            <TextField fullWidth label="Email" value={employer.email}
+                       onChange={(e) => setEmployer(
+                           {...employer, email: e.target.value})}/>
+            <TextField fullWidth label="Giới thiệu công ty" value={employer.bio}
+                       onChange={(e) => setEmployer(
+                           {...employer, bio: e.target.value})}/>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseEditDialog}>Hủy</Button>

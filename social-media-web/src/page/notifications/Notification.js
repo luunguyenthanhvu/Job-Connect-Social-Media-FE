@@ -46,7 +46,7 @@ const Job = () => {
   }, []);
 
   useEffect(() => {
-    // Gọi API lần đầu tiên
+    // Gọi API nếu như có thêm notifycation
     fetchApiData();
   }, [notificationsCount]);
 
